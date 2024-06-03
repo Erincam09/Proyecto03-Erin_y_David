@@ -71,5 +71,9 @@ def config():
     menu_config.mainloop()
 
 
+def pepe():
+
+    print("123344532")
+
 menuInicio()
 
