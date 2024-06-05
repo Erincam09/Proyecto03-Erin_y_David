@@ -164,7 +164,7 @@ class OnevsOne:
         self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
         self.botonrobar = tk.Button(self.juego1, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=30, y=400)
+        self.botonrobar.place(x=30, y=350)
 
         self.imagenOCU = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU = self.imagenOCU.resize((115, 180))
@@ -173,6 +173,7 @@ class OnevsOne:
         self.mostrarcartasjugador()
         self.mostrarcartascomputadora()
         self.mostrarprincipal()
+
     def mostrarcartasjugador(self):
         for widget in self.framejug.winfo_children():
             widget.destroy() 
@@ -191,7 +192,7 @@ class OnevsOne:
 
         for n in range(len(self.computadora)):
             carta = self.computadora[n]
-            imagen = carta.construirimagen()
+            imagen = self.imagenOCU
             self.label2 = tk.Label(self.framecomp,image = imagen, width = 115, height = 180)
             self.label2.grid(row= 0, column = n)
 
@@ -236,12 +237,57 @@ class OnevsOne:
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turnojug == True: 
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero :
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.color == "Negra":
                 self.jugador.remove(carta)
                 self.principal +=[carta]
                 self.turnojug = False
                 self.actualizarinterfaz()
                 self.turnocompu()
+
+                if carta.numero == "CambioColor":
+                    self.cambiarColor()
+
+
+    def cambiarColor(self):
+        self.elegirColor = Tk()
+        self.elegirColor.geometry("700x400")
+        self.elegirColor.resizable(0,0)
+        self.elegirColor.title("Cambio Color")
+        self.elegirColor.config(bg="black")
+
+        self.opciones = tk.Label(self.elegirColor, text="Elija un color:", bg="black", font=("Impact", 22), fg="red4")
+        self.opciones.place(x=265,y=35)
+
+        self.cartaRoja = Image.open("./Cartas/Carta_Roja.png")
+        self.cartaRoja = self.cartaRoja.resize((120, 200))
+        self.cartaRoja = ImageTk.PhotoImage(self.cartaRoja)
+        self.colorRojo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaRoja, command=lambda:color("Roja"))
+        self.colorRojo.place(x=50, y=120)
+
+        self.cartaAzul = Image.open("./Cartas/Carta_Azul.png")
+        self.cartaAzul  = self.cartaAzul.resize((120, 200))
+        self.cartaAzul = ImageTk.PhotoImage(self.cartaAzul)
+        self.colorAzul = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAzul, command=lambda:color("Azul"))
+        self.colorAzul.place(x=210, y=120)
+
+        self.cartaAmarilla = Image.open("./Cartas/Carta_Amarilla.png")
+        self.cartaAmarilla  = self.cartaAmarilla.resize((120, 200))
+        self.cartaAmarilla = ImageTk.PhotoImage(self.cartaAmarilla)
+        self.colorAmarillo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAmarilla, command=lambda:color("Amarilla"))
+        self.colorAmarillo.place(x=370, y=120)
+
+        self.cartaVerde = Image.open("./Cartas/Carta_Verde.png")
+        self.cartaVerde  = self.cartaVerde.resize((120, 200))
+        self.cartaVerde = ImageTk.PhotoImage(self.cartaVerde)
+        self.colorVerde = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaVerde, command=lambda:color("Verde"))
+        self.colorVerde.place(x=530, y=120)
+
+        def color(colorEscogido):
+            self.elegirColor.destroy()
+            return colorEscogido
+
+        self.elegirColor.mainloop()
+
 
     def turnocompu(self):
         ultimacarta = self.principal[-1]
