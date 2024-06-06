@@ -137,11 +137,11 @@ class OnevsOne:
         self.jugador = []
         self.computadora =[]
         self.principal = []
-        self.tipo1 = "Jugador"
-        self.tipo2 = "Computadora"
+        self.contador = 0
+        self.colorEscogido = None
+    
         self.empezarjuego()
         self.juego1.mainloop()
-
     def empezarjuego(self):
         for j in range(7):
             self.jugador +=[self.baraja.mazo.pop(1)]
@@ -170,6 +170,7 @@ class OnevsOne:
         self.imagenOCU = self.imagenOCU.resize((115, 180))
         self.imagenOCU = ImageTk.PhotoImage(self.imagenOCU)
 
+
         self.mostrarcartasjugador()
         self.mostrarcartascomputadora()
         self.mostrarprincipal()
@@ -192,7 +193,7 @@ class OnevsOne:
 
         for n in range(len(self.computadora)):
             carta = self.computadora[n]
-            imagen = self.imagenOCU
+            imagen = carta.construirimagen()
             self.label2 = tk.Label(self.framecomp,image = imagen, width = 115, height = 180)
             self.label2.grid(row= 0, column = n)
 
@@ -226,8 +227,7 @@ class OnevsOne:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-                
-            
+                  
     def robarcompu(self):
         if len(self.baraja.mazo) > 0:
             self.computadora+=[self.baraja.mazo.pop()]
@@ -237,19 +237,64 @@ class OnevsOne:
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turnojug == True: 
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.color == "Negra":
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor":
                 self.jugador.remove(carta)
                 self.principal +=[carta]
                 self.turnojug = False
                 self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+
+    def validarreglasticas(self, carta):
+        if carta.numero == "Reversa" or carta.numero == "Bloqueo":
+            if self.turnojug == False:
+                self.turnojug = True
+            else:
+                self.turnojug = False
                 self.turnocompu()
-
-                if carta.numero == "CambioColor":
-                    self.cambiarColor()
-
-
-    def cambiarColor(self):
-        self.elegirColor = Tk()
+        elif carta.numero == "Toma2":
+            self.contador+=2
+            if self.turnojug == False:
+                for elemento in self.computadora:
+                    if elemento.numero == "Toma2":
+                        self.contador +=2
+                        self.computadora.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug = True
+                        self.validarreglasticas(elemento)
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.turnojug = True
+            else:
+                for elemento in self.jugador:
+                    if elemento.numero == "Toma2":
+                        self.contador +=2
+                        self.jugador.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug = False
+                        self.validarreglasticas(elemento)
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.turnojug = False
+                self.turnocompu()
+        elif carta.numero == "CambioColor":
+            if self.turnojug == False:
+                self.elegir()
+            elif self.turnojug == True:
+                for carta in self.computadora:
+                    if carta.color != "Negra":
+                        color =  carta.color
+                        self.cambiarcolor(color)
+                        messagebox.showinfo("Nuevo", f"El nuevo color es : {color}")
+                        return
+        else:
+            if self.turnojug == False:
+                self.turnocompu()
+    def elegir(self):
+        self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
         self.elegirColor.resizable(0,0)
         self.elegirColor.title("Cambio Color")
@@ -261,48 +306,74 @@ class OnevsOne:
         self.cartaRoja = Image.open("./Cartas/Carta_Roja.png")
         self.cartaRoja = self.cartaRoja.resize((120, 200))
         self.cartaRoja = ImageTk.PhotoImage(self.cartaRoja)
-        self.colorRojo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaRoja, command=lambda:color("Roja"))
-        self.colorRojo.place(x=50, y=120)
 
         self.cartaAzul = Image.open("./Cartas/Carta_Azul.png")
         self.cartaAzul  = self.cartaAzul.resize((120, 200))
         self.cartaAzul = ImageTk.PhotoImage(self.cartaAzul)
-        self.colorAzul = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAzul, command=lambda:color("Azul"))
-        self.colorAzul.place(x=210, y=120)
 
         self.cartaAmarilla = Image.open("./Cartas/Carta_Amarilla.png")
         self.cartaAmarilla  = self.cartaAmarilla.resize((120, 200))
         self.cartaAmarilla = ImageTk.PhotoImage(self.cartaAmarilla)
-        self.colorAmarillo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAmarilla, command=lambda:color("Amarilla"))
-        self.colorAmarillo.place(x=370, y=120)
 
         self.cartaVerde = Image.open("./Cartas/Carta_Verde.png")
         self.cartaVerde  = self.cartaVerde.resize((120, 200))
         self.cartaVerde = ImageTk.PhotoImage(self.cartaVerde)
-        self.colorVerde = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaVerde, command=lambda:color("Verde"))
+
+
+        self.colorRojo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaRoja, command=lambda:self.cambiarcolor("Roja"))
+        self.colorRojo.place(x=50, y=120)
+
+        self.colorAzul = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAzul, command=lambda:self.cambiarcolor("Azul"))
+        self.colorAzul.place(x=210, y=120)
+
+        self.colorAmarillo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAmarilla, command=lambda:self.cambiarcolor("Amarilla"))
+        self.colorAmarillo.place(x=370, y=120)
+
+        self.colorVerde = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaVerde, command=lambda:self.cambiarcolor("Verde"))
         self.colorVerde.place(x=530, y=120)
 
-        def color(colorEscogido):
-            self.elegirColor.destroy()
-            return colorEscogido
-
         self.elegirColor.mainloop()
+    
+    def cambiarcolor(self, colorEscogido):
+        if self.turnojug == False:
+            self.elegirColor.destroy()
+        
+        ultimacarta = self.principal[-1]
+        ultimacarta.color = colorEscogido
 
+        if self.turnojug == False:
+            self.turnocompu()
+        else:
+            self.turnojug = True
+
+        return ultimacarta.color
+       
+    
+    def comercarta(self, cantidad):
+        if self.turnojug == True:
+            for x in range(cantidad):
+                self.jugador +=[self.baraja.mazo.pop()]
+
+        else:
+            for x in range(cantidad):
+                self.computadora +=[self.baraja.mazo.pop()]
+
+        self.actualizarinterfaz()
 
     def turnocompu(self):
         ultimacarta = self.principal[-1]
-
         for carta in self.computadora:
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero :
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor":
                 self.computadora.remove(carta)
                 self.principal +=[carta]
                 self.turnojug = True
                 self.actualizarinterfaz()
+                self.validarreglasticas(carta)
                 return
             
         self.robarcompu()
         
-
+    
 
 
         
