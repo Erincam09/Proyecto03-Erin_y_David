@@ -55,7 +55,7 @@ class Config:
         self.imagenC2 = Image.open("./Fondos/Carta2.png")
         self.imagenC2  = self.imagenC2.resize((120, 200))
         self.imagenC2 = ImageTk.PhotoImage(self.imagenC2)
-        self.jug_2 = tk.Button(self.menu_config, width=120, height=200, image=self.imagenC2)
+        self.jug_2 = tk.Button(self.menu_config, width=120, height=200, image=self.imagenC2, command = self.iramodo2)
         self.jug_2.place(x=250, y=120)
 
         self.imagenC3 = Image.open("./Fondos/Carta3.png")
@@ -73,6 +73,9 @@ class Config:
         self.menu_config.mainloop()
     
     def iramodo1(self):
+        self.menu_config.destroy()
+        OnevsCPU()
+    def iramodo2(self):
         self.menu_config.destroy()
         OnevsOne()
 class Cartas:
@@ -126,11 +129,11 @@ class Mazo:
 
     def mezclar(self):
         random.shuffle(self.mazo) 
-class OnevsOne:
+class OnevsCPU:
     def __init__(self):
         self.juego1 = Tk()
         self.juego1.attributes("-fullscreen",True)
-        self.juego1.title("Juego 1v1")
+        self.juego1.title("Juego 1vCPU")
         self.juego1.config(bg =  "red4")
         self.baraja = Mazo()
         self.baraja.mezclar()
@@ -165,7 +168,7 @@ class OnevsOne:
         self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
         self.botonrobar = tk.Button(self.juego1, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=30, y=350)
+        self.botonrobar.place(x=30, y=250)
 
         self.imagenOCU = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU = self.imagenOCU.resize((115, 180))
@@ -193,9 +196,7 @@ class OnevsOne:
             widget.destroy() 
 
         for n in range(len(self.computadora)):
-            carta = self.computadora[n]
-            imagen = carta.construirimagen()
-            self.label2 = tk.Label(self.framecomp,image = imagen, width = 115, height = 180)
+            self.label2 = tk.Label(self.framecomp,image = self.imagenOCU, width = 115, height = 180)
             self.label2.grid(row= 0, column = n)
 
     def mostrarprincipal(self):
@@ -359,6 +360,7 @@ class OnevsOne:
         else:
             if self.turnojug == False:
                 self.turnocompu()
+
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -418,7 +420,6 @@ class OnevsOne:
 
         return ultimacarta.color
        
-    
     def comercarta(self, cantidad):
         if len(self.baraja.mazo) > 0:
             if self.turnojug == True:
@@ -476,5 +477,335 @@ class OnevsOne:
             self.juego1.destroy()
             MenuInicio()
             return
+class OnevsOne:
+    def __init__(self):
+        self.juego2 = Tk()
+        self.juego2.attributes("-fullscreen",True)
+        self.juego2.title("Juego 1v1")
+        self.juego2.config(bg =  "red4")
+        self.baraja = Mazo()
+        self.baraja.mezclar()
+        self.jugador1 = []
+        self.jugador2 = []
+        self.principal = []
+        self.contador = 0
+        self.colorEscogido = None
+
+        self.empezarjuego()
+        self.juego2.mainloop()
+    
+    def empezarjuego(self):
+        for j in range(7):
+            self.jugador1 +=[self.baraja.mazo.pop(1)]
+            self.jugador2 +=[self.baraja.mazo.pop(1)]
+        self.principal += [self.baraja.mazo.pop(1)]
+
+        self.framejug1 = tk.Frame(self.juego2, width= 1000,bg="red4")
+        self.framejug1.pack(side='bottom', pady=10, padx = 10)
+
+        self.framejug2= tk.Frame(self.juego2,bg="red4")
+        self.framejug2.pack()
+
+        self.frameprin = tk.Frame(self.juego2)
+        self.frameprin.pack(expand = True)
+
+        self.turnojug1 = True
+        self.turnojug2 = False
+        self.comer = True
+        self.coma4 = False
+
+        self.imagenOCU2 = Image.open("./Cartas/Carta_Oculta.png")
+        self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
+        self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
+        self.botonrobar = tk.Button(self.juego2, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
+        self.botonrobar.place(x=30, y=250)
+
+        self.imagenOCU = Image.open("./Cartas/Carta_Oculta.png")
+        self.imagenOCU = self.imagenOCU.resize((115, 180))
+        self.imagenOCU = ImageTk.PhotoImage(self.imagenOCU)
+
+        self.mostrarcartasjugador1()
+        self.mostrarcartasjugador2()
+        self.mostrarprincipal()
+
+    def mostrarcartasjugador1(self):
+        for widget in self.framejug1.winfo_children():
+            widget.destroy() 
+
+        for n in range(len(self.jugador1)):
+            carta = self.jugador1[n]
+            imagen = carta.construirimagen()
+            self.label1 = tk.Label(self.framejug1,image = imagen, width = 115, height = 180)
+            self.label1.grid(row= 0, column = n)
+            self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+    
+    def mostrarcartasjugador2(self):
+        for widget in self.framejug2.winfo_children():
+            widget.destroy() 
+
+        for n in range(len(self.jugador2)):
+            carta = self.jugador2[n]
+            imagen = carta.construirimagen()
+            self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
+            self.label2.grid(row= 0, column = n)
+            self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+
+    def mostrarprincipal(self):
+        for widget in self.frameprin.winfo_children():
+            widget.destroy()
+
+        ultimacarta = self.principal[-1]
+        imagen = ultimacarta.construirimagen()
+        self.label3 = tk.Label(self.frameprin,image = imagen, width = 115, height = 180)
+        self.label3.pack()
+
+    def actualizarinterfaz(self):
+        self.mostrarcartasjugador1()
+        self.mostrarcartasjugador2()
+        self.mostrarprincipal()
+    
+    def robarjug(self):
+        self.comer = True
+        ultimacarta = self.principal[-1]
+
+        if self.turnojug1 == True:
+            self.jugador = self.jugador1
+        else:
+            self.jugador = self.jugador2
+
+        for carta in self.jugador:
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero:
+                self.comer = False
+                break
         
+        if len(self.baraja.mazo) > 0:
+            if self.comer == True:
+                self.jugador+=[self.baraja.mazo.pop()]
+                self.actualizarinterfaz()
+            else:
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+        else:
+            self.mezclarprincipal()
+            if self.comer == True:
+                self.jugador+=[self.baraja.mazo.pop()]
+                self.actualizarinterfaz()
+            else:
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+
+    def mezclarprincipal(self):
+        if len(self.principal)>1: 
+            ultimacarta = self.principal[-1]
+            for elemento in self.principal:
+                if elemento != ultimacarta:
+                    self.baraja.mazo+=[elemento]
+                    self.principal.remove(elemento)
+            random.shuffle(self.baraja.mazo)
+
+    def validarcarta(self,carta):
+        ultimacarta = self.principal[-1]
+        if self.turnojug1 == True and self.turnojug2 == False: 
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                self.jugador1.remove(carta)
+                self.principal +=[carta]
+                self.turnojug1 = False
+                self.turnojug2 = True
+                self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
+        if self.turnojug2 == True and self.turnojug1 == False:
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                self.jugador2.remove(carta)
+                self.principal +=[carta]
+                self.turnojug2 = False
+                self.turnojug1 = True
+                self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
+
+    def validarreglasticas(self, carta):
+        if carta.numero == "Reversa" or carta.numero == "Bloqueo":
+            if self.turnojug2 == False:
+                self.turnojug2 = True
+                self.turnojug1 = False
+            elif self.turnojug2 == True:
+                self.turnojug1 = True
+                self.turnojug2 = False
+        elif carta.numero == "Toma2":
+            self.contador+=2
+            if self.turnojug1 == False:
+                for elemento in self.jugador2:
+                    if elemento.numero == "Toma2":
+                        self.jugador2.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.turnojug1 = True
+                self.turnojug2 = False
+            elif self.turnojug1 == True:
+                for elemento in self.jugador1:
+                    if elemento.numero == "Toma2":
+                        self.jugador1.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug1 = False
+                        self.turnojug2 = True
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.turnojug1 = False
+                self.turnojug2 = True
+        elif carta.numero == "Toma4":
+            self.contador+=4
+            if self.turnojug1 == False:
+                for elemento in self.jugador2:
+                    if elemento.numero == "Toma4":
+                        self.jugador2.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.coma4 = True
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.elegir()
+                self.turnojug1 = True
+                self.turnojug2 = False
+            elif self.turnojug1 == True:
+                for elemento in self.jugador1:
+                    if elemento.numero == "Toma4":
+                        self.jugador1.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug1 = False
+                        self.turnojug2 = True
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.elegir()
+                self.turnojug1 = False
+                self.turnojug2 = True
+
+        elif carta.numero == "CambioColor":
+            if self.turnojug1 == False:
+                self.elegir()
+            elif self.turnojug2 == False:
+                self.elegir()
+
+    def elegir(self):
+        self.elegirColor = Toplevel()
+        self.elegirColor.geometry("700x400")
+        self.elegirColor.resizable(0,0)
+        self.elegirColor.title("Cambio Color")
+        self.elegirColor.config(bg="black")
+
+        self.opciones = tk.Label(self.elegirColor, text="Elija un color:", bg="black", font=("Impact", 22), fg="red4")
+        self.opciones.place(x=265,y=35)
+
+        self.cartaRoja = Image.open("./Cartas/Carta_Roja.png")
+        self.cartaRoja = self.cartaRoja.resize((120, 200))
+        self.cartaRoja = ImageTk.PhotoImage(self.cartaRoja)
+
+        self.cartaAzul = Image.open("./Cartas/Carta_Azul.png")
+        self.cartaAzul  = self.cartaAzul.resize((120, 200))
+        self.cartaAzul = ImageTk.PhotoImage(self.cartaAzul)
+
+        self.cartaAmarilla = Image.open("./Cartas/Carta_Amarilla.png")
+        self.cartaAmarilla  = self.cartaAmarilla.resize((120, 200))
+        self.cartaAmarilla = ImageTk.PhotoImage(self.cartaAmarilla)
+
+        self.cartaVerde = Image.open("./Cartas/Carta_Verde.png")
+        self.cartaVerde  = self.cartaVerde.resize((120, 200))
+        self.cartaVerde = ImageTk.PhotoImage(self.cartaVerde)
+
+
+        self.colorRojo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaRoja, command=lambda:self.cambiarcolor("Roja"))
+        self.colorRojo.place(x=50, y=120)
+
+        self.colorAzul = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAzul, command=lambda:self.cambiarcolor("Azul"))
+        self.colorAzul.place(x=210, y=120)
+
+        self.colorAmarillo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAmarilla, command=lambda:self.cambiarcolor("Amarilla"))
+        self.colorAmarillo.place(x=370, y=120)
+
+        self.colorVerde = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaVerde, command=lambda:self.cambiarcolor("Verde"))
+        self.colorVerde.place(x=530, y=120)
+
+        self.elegirColor.mainloop()
+    
+    def cambiarcolor(self, colorEscogido):
+        self.elegirColor.destroy()
+        
+        ultimacarta = self.principal[-1]
+        ultimacarta.color = colorEscogido
+
+        if self.turnojug1 == False:
+            if self.coma4 ==  False:
+                self.turnojug2 = True
+            else:
+                self.turnojug1 = True
+                self.coma4 = False
+        
+        if self.turnojug2 == False:
+            if self.coma4 ==  False:
+                self.turnojug1 = True
+            else:
+                self.turnojug2 = True
+                self.coma4 = False
+
+        return messagebox.showinfo("Nuevo", f"El nuevo color es : {ultimacarta.color}")
+
+    def comercarta(self, cantidad):
+        if len(self.baraja.mazo)==0:
+            self.mezclarprincipal()
+
+        if len(self.baraja.mazo) > 0:
+            if self.turnojug1 == True:
+                for x in range(cantidad):
+                    self.jugador1 +=[self.baraja.mazo.pop()]
+
+            else:
+                for x in range(cantidad):
+                    self.jugador2 +=[self.baraja.mazo.pop()]
+
+        self.actualizarinterfaz()
+
+    def cartaFinal(self):
+        if len(self.jugador1)==1:
+            messagebox.showinfo("¡UNO!","Al jugador 1 le queda una carta restante")
+            return
+        elif len(self.jugador2)==1:
+            messagebox.showinfo("¡UNO!","Al jugador 2 le queda una carta restante")
+            return
+
+    def validarGane(self):
+        if self.jugador1 == []:
+            messagebox.showinfo("Victoria","¡Felicidades jugador 1, has ganado!")
+            self.juego2.destroy()
+            MenuInicio()
+            return
+        elif self.jugador2 == []:
+            messagebox.showinfo("Victoria","¡Felicidades jugador 2, has ganado!")
+            self.juego2.destroy()
+            MenuInicio()
+            return
+
 MenuInicio()
