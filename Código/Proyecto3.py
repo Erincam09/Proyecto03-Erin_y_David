@@ -159,6 +159,7 @@ class OnevsOne:
 
         self.turnojug = True
         self.comer = True
+        self.coma4 = False
 
         self.imagenOCU2 = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
@@ -227,9 +228,30 @@ class OnevsOne:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-                  
+        else:
+            self.mezclarprincipal()
+            if self.comer == True:
+                self.jugador+=[self.baraja.mazo.pop()]
+                self.actualizarinterfaz()
+            else:
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+
+    def mezclarprincipal(self):
+        if len(self.principal)>1: 
+            ultimacarta = self.principal[-1]
+            for elemento in self.principal:
+                if elemento != ultimacarta:
+                    self.baraja.mazo+=[elemento]
+                    self.principal.remove(elemento)
+            random.shuffle(self.baraja.mazo)
+    
     def robarcompu(self):
         if len(self.baraja.mazo) > 0:
+            self.computadora+=[self.baraja.mazo.pop()]
+            self.actualizarinterfaz()
+            self.turnocompu()
+        else:
+            self.mezclarprincipal()
             self.computadora+=[self.baraja.mazo.pop()]
             self.actualizarinterfaz()
             self.turnocompu()
@@ -237,7 +259,7 @@ class OnevsOne:
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turnojug == True: 
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor":
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
                 self.jugador.remove(carta)
                 self.principal +=[carta]
                 self.turnojug = False
@@ -254,20 +276,22 @@ class OnevsOne:
                 self.turnojug = False
                 self.turnocompu()
         elif carta.numero == "Toma2":
+            self.contador+=2
             if self.turnojug == False:
                 for elemento in self.computadora:
                     if elemento.numero == "Toma2":
-                        self.contador +=2
                         self.computadora.remove(elemento)
                         self.principal+=[elemento]
                         self.actualizarinterfaz()
                         self.turnojug = True
                         self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
                         return
                 self.comercarta(self.contador)
                 self.contador = 0
                 self.turnojug = True
-            else:
+            elif self.turnojug == True:
                 for elemento in self.jugador:
                     if elemento.numero == "Toma2":
                         self.jugador.remove(elemento)
@@ -275,11 +299,53 @@ class OnevsOne:
                         self.actualizarinterfaz()
                         self.turnojug = False
                         self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
                         return
                 self.comercarta(self.contador)
                 self.contador = 0
                 self.turnojug = False
                 self.turnocompu()
+        elif carta.numero == "Toma4":
+            self.contador+=4
+            if self.turnojug == False:
+                for elemento in self.computadora:
+                    if elemento.numero == "Toma4":
+                        self.computadora.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug = True
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.coma4 = True
+                self.comercarta(self.contador)
+                self.contador = 0
+                self.elegir()
+                self.turnojug = True
+            elif self.turnojug == True:
+                for elemento in self.jugador:
+                    if elemento.numero == "Toma4":
+                        self.jugador.remove(elemento)
+                        self.principal+=[elemento]
+                        self.actualizarinterfaz()
+                        self.turnojug = False
+                        self.validarreglasticas(elemento)
+                        self.cartaFinal()
+                        self.validarGane()
+                        return
+                self.comercarta(self.contador)
+                self.contador = 0
+                for carta in self.computadora:
+                    if carta.color != "Negra":
+                        color =  carta.color
+                        self.cambiarcolor(color)
+                        messagebox.showinfo("Nuevo", f"El nuevo color es : {color}")
+                        break
+                self.turnojug = False
+                self.turnocompu()
+
         elif carta.numero == "CambioColor":
             if self.turnojug == False:
                 self.elegir()
@@ -293,7 +359,6 @@ class OnevsOne:
         else:
             if self.turnojug == False:
                 self.turnocompu()
-                
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -343,7 +408,11 @@ class OnevsOne:
         ultimacarta.color = colorEscogido
 
         if self.turnojug == False:
-            self.turnocompu()
+            if self.coma4 ==  False:
+                self.turnocompu()
+            else:
+                self.turnojug = True
+                self.coma4 = False
         else:
             self.turnojug = True
 
@@ -351,47 +420,61 @@ class OnevsOne:
        
     
     def comercarta(self, cantidad):
-        if self.turnojug == True:
-            for x in range(cantidad):
-                self.jugador +=[self.baraja.mazo.pop()]
+        if len(self.baraja.mazo) > 0:
+            if self.turnojug == True:
+                for x in range(cantidad):
+                    self.jugador +=[self.baraja.mazo.pop()]
 
+            else:
+                for x in range(cantidad):
+                    self.computadora +=[self.baraja.mazo.pop()]
         else:
-            for x in range(cantidad):
-                self.computadora +=[self.baraja.mazo.pop()]
+            self.mezclarprincipal()
+            if self.turnojug == True:
+                for x in range(cantidad):
+                    self.jugador +=[self.baraja.mazo.pop()]
+
+            else:
+                for x in range(cantidad):
+                    self.computadora +=[self.baraja.mazo.pop()]
+
 
         self.actualizarinterfaz()
 
     def turnocompu(self):
         ultimacarta = self.principal[-1]
-        for carta in self.computadora:
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor":
-                self.computadora.remove(carta)
-                self.principal +=[carta]
-                self.turnojug = True
-                self.actualizarinterfaz()
-                self.validarreglasticas(carta)
-                return
+        if self.turnojug == False:
+            for carta in self.computadora:
+                if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                    self.computadora.remove(carta)
+                    self.principal +=[carta]
+                    self.turnojug = True
+                    self.actualizarinterfaz()
+                    self.validarreglasticas(carta)
+                    self.cartaFinal()
+                    self.validarGane()
+                    return
             
-        self.robarcompu()
+            self.robarcompu()
 
     def cartaFinal(self):
         if len(self.jugador)==1:
             messagebox.showinfo("¡UNO!","Te queda una carta restante")
+            return
         elif len(self.computadora)==1:
             messagebox.showinfo("¡UNO!","A tu oponente le queda una carta")
+            return
 
     def validarGane(self):
         if self.jugador == []:
             messagebox.showinfo("Victoria","¡Felicidades, Has ganado!")
             self.juego1.destroy()
             MenuInicio()
+            return
         elif self.computadora == []:
             messagebox.showinfo("Derrota","¡Has perdido!")
             self.juego1.destroy()
             MenuInicio()
-        
-    
-
-
+            return
         
 MenuInicio()
