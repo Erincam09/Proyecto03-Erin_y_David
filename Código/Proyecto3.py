@@ -61,7 +61,7 @@ class Config:
         self.imagenC3 = Image.open("./Fondos/Carta3.png")
         self.imagenC3  = self.imagenC3.resize((120, 200))
         self.imagenC3 = ImageTk.PhotoImage(self.imagenC3)
-        self.jug_3 = tk.Button(self.menu_config, width=120, height=200, image=self.imagenC3)
+        self.jug_3 = tk.Button(self.menu_config, width=120, height=200, image=self.imagenC3, command = self.iramodo3)
         self.jug_3.place(x=80, y=350)
 
         self.imagenC4 = Image.open("./Fondos/Carta4.png")
@@ -78,6 +78,9 @@ class Config:
     def iramodo2(self):
         self.menu_config.destroy()
         OnevsOne()
+    def iramodo3(self):
+        self.menu_config.destroy()
+        OnevsOnevsOne()
 class Cartas:
     def __init__(self,color,numero):
 
@@ -807,5 +810,107 @@ class OnevsOne:
             self.juego2.destroy()
             MenuInicio()
             return
+class OnevsOnevsOne:
+    def __init__(self):
+        self.juego3 = Tk()
+        self.juego3.attributes("-fullscreen",True)
+        self.juego3.title("Juego 1v1")
+        self.juego3.config(bg =  "red4")
+        self.baraja = Mazo()
+        self.baraja.mezclar()
+        self.principal = []
+        self.jugador1 = []
+        self.jugador2 = []
+        self.jugador3 = []
+        
+        self.contador = 0
+        self.colorEscogido = None
+        self.reversa = False
+
+        self.empezarjuego()
+        self.juego3.mainloop()
+
+    def empezarjuego(self):
+        for j in range(7):
+            self.jugador1 +=[self.baraja.mazo.pop(1)]
+            self.jugador2 +=[self.baraja.mazo.pop(1)]
+            self.jugador3 +=[self.baraja.mazo.pop(1)]
+        self.principal += [self.baraja.mazo.pop(1)]
+
+        self.framejug1 = tk.Frame(self.juego3, width= 1000,bg="red4")
+        self.framejug1.pack(side='bottom', pady=10, padx = 10)
+
+        self.framejug2= tk.Frame(self.juego3, width= 1000,bg="red4")
+        self.framejug2.pack(side='bottom', pady=10, padx = 10)
+
+        self.framejug3= tk.Frame(self.juego3, width= 1000,bg="red4")
+        self.framejug3.pack(side='bottom', pady=10, padx = 10)
+
+        self.frameprin = tk.Frame(self.juego3)
+        self.frameprin.pack(expand = True)
+
+        self.turnojug1 = True
+        self.turnojug2 = False
+        self.turnojug3 = False
+
+        self.comer = True
+        self.coma4 = False
+
+        self.imagenOCU2 = Image.open("./Cartas/Carta_Oculta.png")
+        self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
+        self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
+        self.botonrobar = tk.Button(self.juego2, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
+        self.botonrobar.place(x=30, y=250)
+
+        self.mostrarcartasjugador1()
+        self.mostrarcartasjugador2()
+        self.mostrarcartasjugador3()
+        self.mostrarprincipal()
+
+    def mostrarcartasjugador1(self):
+        for widget in self.framejug1.winfo_children():
+            widget.destroy() 
+
+        if self.turnojug1 == True:
+            for n in range(len(self.jugador1)):
+                carta = self.jugador1[n]
+                imagen = carta.construirimagen()
+                self.label1 = tk.Label(self.framejug1,image = imagen, width = 115, height = 180)
+                self.label1.grid(row= 0, column = n)
+                self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+    
+    def mostrarcartasjugador2(self):
+        for widget in self.framejug2.winfo_children():
+            widget.destroy() 
+        if self.turnojug2 == True:
+            for n in range(len(self.jugador2)):
+                carta = self.jugador2[n]
+                imagen = carta.construirimagen()
+                self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
+                self.label2.grid(row= 0, column = n)
+                self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+        
+    def mostrarcartasjugador3(self):
+        for widget in self.framejug3.winfo_children():
+            widget.destroy() 
+
+        if self.turnojug3 == True:
+            for n in range(len(self.jugador3)):
+                carta = self.jugador3[n]
+                imagen = carta.construirimagen()
+                self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
+                self.label2.grid(row= 0, column = n)
+                self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+
+    def mostrarprincipal(self):
+        for widget in self.frameprin.winfo_children():
+            widget.destroy()
+
+        ultimacarta = self.principal[-1]
+        imagen = ultimacarta.construirimagen()
+        self.label3 = tk.Label(self.frameprin,image = imagen, width = 115, height = 180)
+        self.label3.pack()
+    
+    
 
 MenuInicio()
