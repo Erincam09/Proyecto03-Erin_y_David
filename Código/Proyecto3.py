@@ -148,10 +148,10 @@ class OnevsOne:
             self.computadora +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.framejug = tk.Frame(self.juego1, width= 1000)
+        self.framejug = tk.Frame(self.juego1, width= 1000,bg="red4")
         self.framejug.pack(side='bottom', pady=10, padx = 10)
 
-        self.framecomp= tk.Frame(self.juego1)
+        self.framecomp= tk.Frame(self.juego1,bg="red4")
         self.framecomp.pack()
 
         self.frameprin = tk.Frame(self.juego1)
@@ -243,6 +243,8 @@ class OnevsOne:
                 self.turnojug = False
                 self.actualizarinterfaz()
                 self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
 
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa" or carta.numero == "Bloqueo":
@@ -252,7 +254,6 @@ class OnevsOne:
                 self.turnojug = False
                 self.turnocompu()
         elif carta.numero == "Toma2":
-            self.contador+=2
             if self.turnojug == False:
                 for elemento in self.computadora:
                     if elemento.numero == "Toma2":
@@ -269,7 +270,6 @@ class OnevsOne:
             else:
                 for elemento in self.jugador:
                     if elemento.numero == "Toma2":
-                        self.contador +=2
                         self.jugador.remove(elemento)
                         self.principal+=[elemento]
                         self.actualizarinterfaz()
@@ -293,6 +293,7 @@ class OnevsOne:
         else:
             if self.turnojug == False:
                 self.turnocompu()
+                
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -372,6 +373,22 @@ class OnevsOne:
                 return
             
         self.robarcompu()
+
+    def cartaFinal(self):
+        if len(self.jugador)==1:
+            messagebox.showinfo("¡UNO!","Te queda una carta restante")
+        elif len(self.computadora)==1:
+            messagebox.showinfo("¡UNO!","A tu oponente le queda una carta")
+
+    def validarGane(self):
+        if self.jugador == []:
+            messagebox.showinfo("Victoria","¡Felicidades, Has ganado!")
+            self.juego1.destroy()
+            MenuInicio()
+        elif self.computadora == []:
+            messagebox.showinfo("Derrota","¡Has perdido!")
+            self.juego1.destroy()
+            MenuInicio()
         
     
 
