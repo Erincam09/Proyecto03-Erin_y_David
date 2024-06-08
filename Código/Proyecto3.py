@@ -701,6 +701,7 @@ class OnevsOne:
                         self.cartaFinal()
                         self.validarGane()
                         return
+                self.coma4 = True
                 self.comercarta(self.contador)
                 self.contador = 0
                 self.elegir()
@@ -836,13 +837,13 @@ class OnevsOnevsOne:
             self.jugador2 +=[self.baraja.mazo.pop(1)]
             self.jugador3 +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
-
+        
         self.framejug1 = tk.Frame(self.juego3, width= 1000,bg="red4")
         self.framejug1.pack(side='bottom', pady=10, padx = 10)
-
+    
         self.framejug2= tk.Frame(self.juego3, width= 1000,bg="red4")
         self.framejug2.pack(side='bottom', pady=10, padx = 10)
-
+        
         self.framejug3= tk.Frame(self.juego3, width= 1000,bg="red4")
         self.framejug3.pack(side='bottom', pady=10, padx = 10)
 
@@ -859,7 +860,7 @@ class OnevsOnevsOne:
         self.imagenOCU2 = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
-        self.botonrobar = tk.Button(self.juego2, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
+        self.botonrobar = tk.Button(self.juego3, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
         self.botonrobar.place(x=30, y=250)
 
         self.mostrarcartasjugador1()
@@ -911,6 +912,549 @@ class OnevsOnevsOne:
         self.label3 = tk.Label(self.frameprin,image = imagen, width = 115, height = 180)
         self.label3.pack()
     
+    def actualizarinterfaz(self):
+        self.mostrarcartasjugador1()
+        self.mostrarcartasjugador2()
+        self.mostrarcartasjugador3()
+        self.mostrarprincipal()
     
+    def robarjug(self):
+        self.comer = True
+        ultimacarta = self.principal[-1]
+
+        if self.turnojug1 == True:
+            self.jugador = self.jugador1
+        if self.turnojug2 == True:
+            self.jugador = self.jugador2
+        if self.turnojug3 == True:
+            self.jugador = self.jugador3
+
+        for carta in self.jugador:
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero:
+                self.comer = False
+                break
+        
+        if len(self.baraja.mazo) > 0:
+            if self.comer == True:
+                self.jugador+=[self.baraja.mazo.pop()]
+                self.actualizarinterfaz()
+            else:
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+        else:
+            self.mezclarprincipal()
+            if self.comer == True:
+                self.jugador+=[self.baraja.mazo.pop()]
+                self.actualizarinterfaz()
+            else:
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+
+    def mezclarprincipal(self):
+        if len(self.principal)>1: 
+            ultimacarta = self.principal[-1]
+            for elemento in self.principal:
+                if elemento != ultimacarta:
+                    self.baraja.mazo+=[elemento]
+                    self.principal.remove(elemento)
+            random.shuffle(self.baraja.mazo)
+
+    def validarcarta(self,carta):
+        ultimacarta = self.principal[-1]
+        if self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False: 
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                self.jugador1.remove(carta)
+                self.principal +=[carta]
+                if self.reversa == False:
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+                else:
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
+        if self.turnojug2 == True and self.turnojug1 == False and self.turnojug3 == False:
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                self.jugador2.remove(carta)
+                self.principal +=[carta]
+                if self.reversa == False:
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                else:
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+                self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
+        if self.turnojug3 == True and self.turnojug1 == False and self.turnojug2 == False:
+            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero or carta.numero == "CambioColor" or carta.numero == "Toma4":
+                self.jugador3.remove(carta)
+                self.principal +=[carta]
+                if self.reversa == False:
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+                else: 
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+                self.actualizarinterfaz()
+                self.validarreglasticas(carta)
+                self.cartaFinal()
+                self.validarGane()
+
+    def validarreglasticas(self, carta):
+        if carta.numero == "Reversa":
+            if self.reversa == False:
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                        self.turnojug3 = True
+                        self.turnojug1 = False
+                        self.turnojug2 = False
+                
+                if self.turnojug2 == False and self.turnojug1 == False and self.turnojug3 == True:
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.turnojug3 = False
+
+                if self.turnojug3 == False and self.turnojug1 == True and self.turnojug2 == False:
+                        self.turnojug2 = True
+                        self.turnojug1 = False
+                        self.turnojug3 = False
+                self.reversa = True
+            else:
+                if self.turnojug1 == False and self.turnojug2 == False and self.turnojug3 == True:
+                        self.turnojug2 = True
+                        self.turnojug1 = False
+                        self.turnojug3 = False
+
+                if self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False:
+                        self.turnojug3 = True
+                        self.turnojug2 = False
+                        self.turnojug1 = False
+
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.turnojug3 = False
+                self.reversa = False
+
+        elif carta.numero == "Bloqueo": 
+            if self.reversa == False:
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                        self.turnojug3 = True
+                        self.turnojug1 = False
+                        self.turnojug2 = False
+                
+                if self.turnojug2 == False and self.turnojug1 == False and self.turnojug3 == True:
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.turnojug3 = False
+
+                if self.turnojug3 == False and self.turnojug1 == True and self.turnojug2 == False:
+                        self.turnojug2 = True
+                        self.turnojug1 = False
+                        self.turnojug3 = False
+            else:
+                if self.turnojug1 == False and self.turnojug2 == False and self.turnojug3 == True:
+                        self.turnojug2 = True
+                        self.turnojug1 = False
+                        self.turnojug3 = False
+
+                if self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False:
+                        self.turnojug3 = True
+                        self.turnojug2 = False
+                        self.turnojug1 = False
+
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                        self.turnojug1 = True
+                        self.turnojug2 = False
+                        self.turnojug3 = False
+                
+        elif carta.numero == "Toma2":
+            self.contador+=2
+            if self.reversa == False:
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                    for elemento in self.jugador2:
+                        if elemento.numero == "Toma2":
+                            self.jugador2.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = False
+                            self.turnojug3 = True
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                elif self.turnojug2 == False and self.turnojug1 == False and self.turnojug3 == True:
+                    for elemento in self.jugador3:
+                        if elemento.numero == "Toma2":
+                            self.jugador3.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = True
+                            self.turnojug2 = False
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+                elif self.turnojug3 == False and self.turnojug1 == True and self.turnojug2 == False:
+                    for elemento in self.jugador1:
+                        if elemento.numero == "Toma2":
+                            self.jugador1.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = True
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+            else:
+                if self.turnojug1 == False and self.turnojug2 == False and self.turnojug3 == True:
+                    for elemento in self.jugador3:
+                        if elemento.numero == "Toma2":
+                            self.jugador3.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = True
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+                elif self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False:
+                    for elemento in self.jugador1:
+                        if elemento.numero == "Toma2":
+                            self.jugador1.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = False
+                            self.turnojug3 = True
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                    for elemento in self.jugador2:
+                        if elemento.numero == "Toma2":
+                            self.jugador2.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = True
+                            self.turnojug2 = False
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+        
+        elif carta.numero == "Toma4":
+            self.contador+=4
+            if self.reversa == False:
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                    for elemento in self.jugador2:
+                        if elemento.numero == "Toma4":
+                            self.jugador2.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = False
+                            self.turnojug3 = True
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                elif self.turnojug2 == False and self.turnojug1 == False and self.turnojug3 == True:
+                    for elemento in self.jugador3:
+                        if elemento.numero == "Toma4":
+                            self.jugador3.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = True
+                            self.turnojug2 = False
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+                elif self.turnojug3 == False and self.turnojug1 == True and self.turnojug2 == False:
+                    for elemento in self.jugador1:
+                        if elemento.numero == "Toma4":
+                            self.jugador1.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = True
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+            else:
+                if self.turnojug1 == False and self.turnojug2 == False and self.turnojug3 == True:
+                    for elemento in self.jugador3:
+                        if elemento.numero == "Toma4":
+                            self.jugador3.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = True
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = False
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+                elif self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False:
+                    for elemento in self.jugador1:
+                        if elemento.numero == "Toma4":
+                            self.jugador1.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = False
+                            self.turnojug2 = False
+                            self.turnojug3 = True
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = False
+                    self.turnojug2 = False
+                    self.turnojug3 = True
+                if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                    for elemento in self.jugador2:
+                        if elemento.numero == "Toma4":
+                            self.jugador2.remove(elemento)
+                            self.principal+=[elemento]
+                            self.actualizarinterfaz()
+                            self.turnojug1 = True
+                            self.turnojug2 = False
+                            self.turnojug3 = False
+                            self.validarreglasticas(elemento)
+                            self.cartaFinal()
+                            self.validarGane()
+                            return
+                    self.coma4 = True
+                    self.comercarta(self.contador)
+                    self.contador = 0
+                    self.elegir()
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.turnojug3 = False
+
+        elif carta.numero == "CambioColor":
+            self.elegir()
+
+    def elegir(self):
+        self.elegirColor = Toplevel()
+        self.elegirColor.geometry("700x400")
+        self.elegirColor.resizable(0,0)
+        self.elegirColor.title("Cambio Color")
+        self.elegirColor.config(bg="black")
+
+        self.opciones = tk.Label(self.elegirColor, text="Elija un color:", bg="black", font=("Impact", 22), fg="red4")
+        self.opciones.place(x=265,y=35)
+
+        self.cartaRoja = Image.open("./Cartas/Carta_Roja.png")
+        self.cartaRoja = self.cartaRoja.resize((120, 200))
+        self.cartaRoja = ImageTk.PhotoImage(self.cartaRoja)
+
+        self.cartaAzul = Image.open("./Cartas/Carta_Azul.png")
+        self.cartaAzul  = self.cartaAzul.resize((120, 200))
+        self.cartaAzul = ImageTk.PhotoImage(self.cartaAzul)
+
+        self.cartaAmarilla = Image.open("./Cartas/Carta_Amarilla.png")
+        self.cartaAmarilla  = self.cartaAmarilla.resize((120, 200))
+        self.cartaAmarilla = ImageTk.PhotoImage(self.cartaAmarilla)
+
+        self.cartaVerde = Image.open("./Cartas/Carta_Verde.png")
+        self.cartaVerde  = self.cartaVerde.resize((120, 200))
+        self.cartaVerde = ImageTk.PhotoImage(self.cartaVerde)
+
+
+        self.colorRojo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaRoja, command=lambda:self.cambiarcolor("Roja"))
+        self.colorRojo.place(x=50, y=120)
+
+        self.colorAzul = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAzul, command=lambda:self.cambiarcolor("Azul"))
+        self.colorAzul.place(x=210, y=120)
+
+        self.colorAmarillo = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaAmarilla, command=lambda:self.cambiarcolor("Amarilla"))
+        self.colorAmarillo.place(x=370, y=120)
+
+        self.colorVerde = tk.Button(self.elegirColor, width=120, height=200, image=self.cartaVerde, command=lambda:self.cambiarcolor("Verde"))
+        self.colorVerde.place(x=530, y=120)
+
+        self.elegirColor.mainloop()
+    
+    def cambiarcolor(self, colorEscogido):
+        self.elegirColor.destroy()
+        
+        ultimacarta = self.principal[-1]
+        ultimacarta.color = colorEscogido
+        if self.reversa == False:
+            if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                if self.coma4 ==  False:
+                    self.turnojug2 = True
+                else:
+                    self.turnojug1 = True
+                    self.turnojug2 = False
+                    self.coma4 = False
+            
+            if self.turnojug2 == False and self.turnojug1 == False and self.turnojug3 == True:
+                if self.coma4 ==  False:
+                    self.turnojug3 = True
+                else:
+                    self.turnojug2 = True
+                    self.turnojug3 = False
+                    self.coma4 = False
+
+            if self.turnojug3 == False and self.turnojug1 == True and self.turnojug2 == False:
+                if self.coma4 ==  False:
+                    self.turnojug1 = True
+                else:
+                    self.turnojug3 = True
+                    self.turnojug1 = False
+                    self.coma4 = False
+        else:
+            if self.turnojug1 == False and self.turnojug2 == False and self.turnojug3 == True:
+                if self.coma4 ==  False:
+                    self.turnojug3 = True
+                else:
+                    self.turnojug1 = True
+                    self.turnojug3 = False
+                    self.coma4 = False
+            if self.turnojug1 == True and self.turnojug2 == False and self.turnojug3 == False:
+                if self.coma4 ==  False:
+                    self.turnojug1 = True
+                else:
+                    self.turnojug2 = True
+                    self.turnojug1 = False
+                    self.coma4 = False
+            if self.turnojug1 == False and self.turnojug2 == True and self.turnojug3 == False:
+                if self.coma4 ==  False:
+                    self.turnojug2 = True
+                else:
+                    self.turnojug3 = True
+                    self.turnojug2 = False
+        
+        return messagebox.showinfo("Nuevo", f"El nuevo color es : {ultimacarta.color}")
+
+    def comercarta(self, cantidad):
+        if len(self.baraja.mazo)==0:
+            self.mezclarprincipal()
+
+        if len(self.baraja.mazo) > 0:
+            if self.turnojug1 == True:
+                for x in range(cantidad):
+                    self.jugador1 +=[self.baraja.mazo.pop()]
+
+            if self.turnojug2 == True:
+                for x in range(cantidad):
+                    self.jugador2 +=[self.baraja.mazo.pop()]
+
+            if self.turnojug3 == True:
+                for x in range(cantidad):
+                    self.jugador3 +=[self.baraja.mazo.pop()]
+
+        self.actualizarinterfaz()
+
+    def cartaFinal(self):
+        if len(self.jugador1)==1:
+            messagebox.showinfo("¡UNO!","Al jugador 1 le queda una carta restante")
+            return
+        elif len(self.jugador2)==1:
+            messagebox.showinfo("¡UNO!","Al jugador 2 le queda una carta restante")
+            return
+        elif len(self.jugador3)==1:
+            messagebox.showinfo("¡UNO!","Al jugador 3 le queda una carta restante")
+            return
+
+    def validarGane(self):
+        if self.jugador1 == []:
+            messagebox.showinfo("Victoria","¡Felicidades jugador 1, has ganado!")
+            self.juego3.destroy()
+            MenuInicio()
+            return
+        elif self.jugador2 == []:
+            messagebox.showinfo("Victoria","¡Felicidades jugador 2, has ganado!")
+            self.juego3.destroy()
+            MenuInicio()
+            return
+        elif self.jugador3 == []:
+            messagebox.showinfo("Victoria","¡Felicidades jugador 3, has ganado!")
+            self.juego3.destroy()
+            MenuInicio()
+            return
 
 MenuInicio()
