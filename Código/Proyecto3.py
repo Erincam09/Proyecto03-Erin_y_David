@@ -37,15 +37,11 @@ class Config:
         self.menu_config.title("UNO")
         self.menu_config.resizable(0, 0)
 
-        self.imagen = Image.open("./Fondos/FondoConfig.png")
+        self.imagen = Image.open("./Fondos/FondoConfig2.png")
         self.imagen = self.imagen.resize((1000, 600))
         self.imagen = ImageTk.PhotoImage(self.imagen)
         self.label_imagen = tk.Label(self.menu_config, image=self.imagen)
         self.label_imagen.place(x=0, y=0, relheight=1, relwidth=1)
-
-        self.modo = tk.Label(self.menu_config, text="MODO DE JUEGO:", bg="red", font=("Impact", 22), fg="black")
-        self.modo.place(x=135, y=50)
-
         self.imagenC1 = Image.open("./Fondos/Carta1.png")
         self.imagenC1 = self.imagenC1.resize((120, 200))
         self.imagenC1 = ImageTk.PhotoImage(self.imagenC1)
@@ -162,10 +158,19 @@ class OnevsCPU:
             self.computadora +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.framejug = tk.Frame(self.juego1, width= 1000,bg="red4")
-        self.framejug.place(x=5, y = 615)
+        self.canvas = tk.Canvas(self.juego1, width = 1150, height = 160, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
+        self.canvas.place(x=75, y = 660)
 
-        self.framecomp= tk.Frame(self.juego1,bg="red4", width = 1000)
+        # Creamos un scrollbar horizontal y lo asociamos al canvas
+        self.scrollbar = tk.Scrollbar(self.juego1, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.configure(xscrollcommand=self.scrollbar.set)
+
+        # Creamos un frame dentro del canvas para colocar los labels
+        self.framejug = tk.Frame(self.canvas, width=700, heigh = 180, bg="red4")  # Ancho del frame ajustado a tu contenido
+        self.canvas.create_window((0, 0), window=self.framejug, anchor=tk.NW)
+
+        self.framecomp= tk.Frame(self.juego1,bg="red4", width = 2000)
         self.framecomp.place(x=360, y=5)
 
         self.frameprin = tk.Frame(self.juego1)
@@ -199,6 +204,9 @@ class OnevsCPU:
             self.label = tk.Label(self.framejug,image = imagen, width = 90, height = 150)
             self.label.grid(row= 0, column = n)
             self.label.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+        
+        self.framejug.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
 
     def mostrarcartascomputadora(self):
 
@@ -223,7 +231,6 @@ class OnevsCPU:
         self.mostrarcartasjugador()
         self.mostrarcartascomputadora()
         
-       
     
     def robarjug(self):
         self.comer = True
