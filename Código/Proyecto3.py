@@ -137,7 +137,7 @@ class OnevsCPU:
         self.juego1 = Tk()
         self.juego1.attributes("-fullscreen",True)
         self.juego1.title("Juego 1vCPU")
-        self.imagen = Image.open("./Fondos/FondoPrueba.png")
+        self.imagen = Image.open("./Fondos/FondoUnoVsCPU.png")
         ancho = self.juego1.winfo_screenwidth()
         alto = self.juego1.winfo_screenheight()
         self.imagen = self.imagen.resize((ancho,alto))
@@ -160,28 +160,26 @@ class OnevsCPU:
             self.computadora +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.canvas2= tk.Canvas(self.juego1, width = 1500, height = 200, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
-        self.canvas2.place(x=360, y=30)
+        self.canvas2= tk.Canvas(self.juego1, width = 1140, height = 185, bg = "red4", scrollregion=(0, 0, 1000, 800)) 
+        self.canvas2.place(x=230, y=0)
         self.canvas2.config(highlightthickness=0)
 
-        self.canvas = tk.Canvas(self.juego1, width = 1500, height = 200, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
-        self.canvas.place(x=30, y = 850)
+        self.canvas = tk.Canvas(self.juego1, width = 1140, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas.place(x=0, y = 570)
         self.canvas.config(highlightthickness=0)
 
-        # Creamos un scrollbar horizontal y lo asociamos al canvas
         self.scrollbar = tk.Scrollbar(self.juego1, orient=tk.HORIZONTAL, command=self.canvas.xview)
         self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.configure(xscrollcommand=self.scrollbar.set)
 
-        # Creamos un frame dentro del canvas para colocar los labels
-        self.framejug = tk.Frame(self.canvas, width=700, height = 200, bg="red4")  # Ancho del frame ajustado a tu contenido
+        self.framejug = tk.Frame(self.canvas, width=700, height = 185, bg="red4") 
         self.canvas.create_window((20, 20), window=self.framejug, anchor=tk.NW)
 
         self.framecomp= tk.Frame(self.canvas2,bg="red4",  width=700, height = 200)
         self.canvas2.create_window((20, 20), window=self.framecomp, anchor=tk.NW)
 
         self.frameprin = tk.Frame(self.juego1)
-        self.frameprin.place(x=515, y =290)
+        self.frameprin.place(x=560, y =310)
 
         self.turnojug = True
         self.comer = True
@@ -191,7 +189,7 @@ class OnevsCPU:
         self.imagenOCU2 = self.imagenOCU2.resize((90, 150 ))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
         self.botonrobar = tk.Button(self.juego1, width=90, height=150, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=740, y=290)
+        self.botonrobar.place(x=735, y=310)
 
         self.imagenOCU = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU = self.imagenOCU.resize((90, 150))
@@ -515,7 +513,7 @@ class OnevsOne:
         self.juego2 = Tk()
         self.juego2.attributes("-fullscreen",True)
         self.juego2.title("Juego 1v1")
-        self.imagen = Image.open("./Fondos/FondoCg.png")
+        self.imagen = Image.open("./Fondos/FondoUnoVsUno.png")
         ancho = self.juego2.winfo_screenwidth()
         alto = self.juego2.winfo_screenheight()
         self.imagen = self.imagen.resize((ancho,alto))
@@ -539,14 +537,30 @@ class OnevsOne:
             self.jugador2 +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.framejug1 = tk.Frame(self.juego2, width= 1000,bg="red4")
-        self.framejug1.pack(side='bottom', pady=10, padx = 10)
+        self.canvas2= tk.Canvas(self.juego2, width = 1120, height = 185, bg = "red4", scrollregion=(0, 0, 800, 800)) 
+        self.canvas2.place(x=235, y=0)
+        self.canvas2.config(highlightthickness=0)
 
-        self.framejug2= tk.Frame(self.juego2,bg="red4")
-        self.framejug2.pack()
+        self.canvas = tk.Canvas(self.juego2, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 800, 800))  
+        self.canvas.place(x=0, y = 570)
+        self.canvas.config(highlightthickness=0)
+
+        self.scrollbar = tk.Scrollbar(self.juego2, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.configure(xscrollcommand=self.scrollbar.set)
+
+        self.scrollbar2 = tk.Scrollbar(self.juego2, orient=tk.HORIZONTAL, command=self.canvas2.xview)
+        self.scrollbar2.pack(side=tk.TOP, fill=tk.X)
+        self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
+
+        self.framejug1 = tk.Frame(self.canvas, width=700, height = 185, bg="red4") 
+        self.canvas.create_window((20, 20), window=self.framejug1, anchor=tk.NW)
+
+        self.framejug2= tk.Frame(self.canvas2,bg="red4",  width=700, height = 200)
+        self.canvas2.create_window((20, 20), window=self.framejug2, anchor=tk.NW)
 
         self.frameprin = tk.Frame(self.juego2)
-        self.frameprin.place(x= 515, y = 290)
+        self.frameprin.place(x= 560, y = 310)
 
         self.turnojug1 = True
         self.turnojug2 = False
@@ -559,7 +573,7 @@ class OnevsOne:
         self.imagenOCU2 = self.imagenOCU2.resize((90, 150  ))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
         self.botonrobar = tk.Button(self.juego2, width=90, height=150, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=740, y=290)
+        self.botonrobar.place(x=735, y=310)
 
         self.imagenOCU = Image.open("./Cartas/Carta_Oculta.png")
         self.imagenOCU = self.imagenOCU.resize((90, 150))
