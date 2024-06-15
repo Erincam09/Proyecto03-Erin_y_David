@@ -138,7 +138,9 @@ class OnevsCPU:
         self.juego1.attributes("-fullscreen",True)
         self.juego1.title("Juego 1vCPU")
         self.imagen = Image.open("./Fondos/FondoPrueba.png")
-        self.imagen = self.imagen.resize((1400,800))
+        ancho = self.juego1.winfo_screenwidth()
+        alto = self.juego1.winfo_screenheight()
+        self.imagen = self.imagen.resize((ancho,alto))
         self.imagen= ImageTk.PhotoImage(self.imagen)
         self.label_imagen = tk.Label(self.juego1, image = self.imagen)
         self.label_imagen.place(x=0, y=0, relheight = 1, relwidth = 1)
@@ -158,8 +160,13 @@ class OnevsCPU:
             self.computadora +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.canvas = tk.Canvas(self.juego1, width = 1150, height = 160, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
-        self.canvas.place(x=75, y = 660)
+        self.canvas2= tk.Canvas(self.juego1, width = 1500, height = 200, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
+        self.canvas2.place(x=360, y=30)
+        self.canvas2.config(highlightthickness=0)
+
+        self.canvas = tk.Canvas(self.juego1, width = 1500, height = 200, bg = "red4", scrollregion=(0, 0, 1000, 800))  # Scroll region ajustada a tu contenido
+        self.canvas.place(x=30, y = 850)
+        self.canvas.config(highlightthickness=0)
 
         # Creamos un scrollbar horizontal y lo asociamos al canvas
         self.scrollbar = tk.Scrollbar(self.juego1, orient=tk.HORIZONTAL, command=self.canvas.xview)
@@ -167,11 +174,11 @@ class OnevsCPU:
         self.canvas.configure(xscrollcommand=self.scrollbar.set)
 
         # Creamos un frame dentro del canvas para colocar los labels
-        self.framejug = tk.Frame(self.canvas, width=700, heigh = 180, bg="red4")  # Ancho del frame ajustado a tu contenido
-        self.canvas.create_window((0, 0), window=self.framejug, anchor=tk.NW)
+        self.framejug = tk.Frame(self.canvas, width=700, height = 200, bg="red4")  # Ancho del frame ajustado a tu contenido
+        self.canvas.create_window((20, 20), window=self.framejug, anchor=tk.NW)
 
-        self.framecomp= tk.Frame(self.juego1,bg="red4", width = 2000)
-        self.framecomp.place(x=360, y=5)
+        self.framecomp= tk.Frame(self.canvas2,bg="red4",  width=700, height = 200)
+        self.canvas2.create_window((20, 20), window=self.framecomp, anchor=tk.NW)
 
         self.frameprin = tk.Frame(self.juego1)
         self.frameprin.place(x=515, y =290)
@@ -509,7 +516,9 @@ class OnevsOne:
         self.juego2.attributes("-fullscreen",True)
         self.juego2.title("Juego 1v1")
         self.imagen = Image.open("./Fondos/FondoCg.png")
-        self.imagen = self.imagen.resize((1400,800))
+        ancho = self.juego2.winfo_screenwidth()
+        alto = self.juego2.winfo_screenheight()
+        self.imagen = self.imagen.resize((ancho,alto))
         self.imagen= ImageTk.PhotoImage(self.imagen)
         self.label_imagen = tk.Label(self.juego2, image = self.imagen)
         self.label_imagen.place(x=0, y=0, relheight = 1, relwidth = 1)
@@ -615,9 +624,10 @@ class OnevsOne:
             self.jugador = self.jugador2
 
         for carta in self.jugador:
-            if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero:
-                self.comer = False
-                break
+            if carta.color != "Negra":
+                if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero:
+                    self.comer = False
+                    break
         
         if len(self.baraja.mazo) > 0:
             if self.comer == True:
