@@ -2373,7 +2373,12 @@ class OnevsOnevsOnevsOne:
                     self.actualizarinterfaz()
                     self.cartaFinal()
                     self.validarGane()
-                
+    """
+    Nombre: validarreglasticas
+    Entradas: carta
+    Salidas: valida las reglas ticas, ya sea bloqueo, reversa, cambio de color, toma2 o toma4
+    Restricciones:
+    """           
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa":
             if self.reversa == False:
