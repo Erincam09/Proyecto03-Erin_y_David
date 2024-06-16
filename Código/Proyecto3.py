@@ -241,8 +241,8 @@ class OnevsCPU:
         self.contador = 0
         self.colorEscogido = None
 
-        self.reiniciar = tk.Button(self.juego1, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
-        self.reiniciar.place(x=50, y= 500)
+        self.reiniciar = tk.Button(self.juego1, text="Reiniciar", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=25, y= 520)
         self.empezarjuego()
         self.juego1.mainloop()
     
@@ -267,8 +267,8 @@ class OnevsCPU:
             self.computadora +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.canvas2= tk.Canvas(self.juego1, width = 1140, height = 185, bg = "red4", scrollregion=(0, 0, 1000, 800)) 
-        self.canvas2.place(x=230, y=0)
+        self.canvas2= tk.Canvas(self.juego1, width = 1130, height = 185, bg = "red4", scrollregion=(0, 0, 1000, 800)) 
+        self.canvas2.place(x=220, y=0)
         self.canvas2.config(highlightthickness=0)
 
         self.canvas = tk.Canvas(self.juego1, width = 1140, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
@@ -377,8 +377,6 @@ class OnevsCPU:
             if carta.color == ultimacarta.color or carta.numero == ultimacarta.numero:
                 self.comer = False
                 break
-        
-
         if len(self.baraja.mazo) > 0:
             if self.comer == True:
                 self.jugador+=[self.baraja.mazo.pop()]
@@ -538,7 +536,6 @@ class OnevsCPU:
         else:
             if self.turnojug == False:
                 self.actualizarinterfaz()
-                print("tURNO COMP EN ESPERA")
                 self.turnocompu()
     """
     Nombre: elegir
@@ -650,7 +647,6 @@ class OnevsCPU:
                     self.computadora.remove(carta)
                     self.principal +=[carta]
                     self.turnojug = True
-                    print("LANZADA CMP")
                     time.sleep(3)
                     self.actualizarinterfaz()
                     self.validarreglasticas(carta)
@@ -711,8 +707,8 @@ class OnevsOne:
         self.contador = 0
         self.colorEscogido = None
 
-        self.reiniciar = tk.Button(self.juego2, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
-        self.reiniciar.place(x=50, y= 500)
+        self.reiniciar = tk.Button(self.juego2, text="Reiniciar", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=25, y= 520)
         self.empezarjuego()
         self.juego2.mainloop()
     
@@ -1189,7 +1185,13 @@ class OnevsOnevsOne:
         self.juego3 = Tk()
         self.juego3.attributes("-fullscreen",True)
         self.juego3.title("Juego 1vs1vs1")
-        self.juego3.config(bg =  "red4")
+        self.imagen = Image.open("./Fondos/Fondo3jugadores.png")
+        ancho = self.juego3.winfo_screenwidth()
+        alto = self.juego3.winfo_screenheight()
+        self.imagen = self.imagen.resize((ancho,alto))
+        self.imagen= ImageTk.PhotoImage(self.imagen)
+        self.label_imagen = tk.Label(self.juego3, image = self.imagen)
+        self.label_imagen.place(x=0, y=0, relheight = 1, relwidth = 1)
         self.baraja = Mazo()
         self.baraja.mezclar()
         self.principal = []
@@ -1201,8 +1203,8 @@ class OnevsOnevsOne:
         self.colorEscogido = None
         self.reversa = False
 
-        self.reiniciar = tk.Button(self.juego3, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
-        self.reiniciar.place(x=50, y= 500)
+        self.reiniciar = tk.Button(self.juego3, text="Reiniciar", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=25, y= 520)
         self.empezarjuego()
         self.juego3.mainloop()
     
@@ -1230,21 +1232,21 @@ class OnevsOnevsOne:
         self.principal += [self.baraja.mazo.pop(1)]
 
         self.canvas = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas.place(x=50, y = 500)
+        self.canvas.place(x=0, y = 570)
         self.canvas.config(highlightthickness=0)
         self.scrollbar = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas.xview)
         self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.configure(xscrollcommand=self.scrollbar.set)
 
         self.canvas2 = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas2.place(x=50, y = 500)
+        self.canvas2.place(x=0, y = 570)
         self.canvas2.config(highlightthickness=0)
         self.scrollbar2 = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas2.xview)
         self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
 
         self.canvas3 = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas3.place(x=50, y = 500)
+        self.canvas3.place(x=0, y = 570)
         self.canvas3.config(highlightthickness=0)
         self.scrollbar3 = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas3.xview)
         self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1256,18 +1258,18 @@ class OnevsOnevsOne:
         self.canvas2.create_window((20, 20), window=self.framejug2, anchor='nw')
         self.framejug3= tk.Frame(self.canvas3, width=700, height = 200, bg="red4")
         self.canvas3.create_window((20, 20), window=self.framejug3, anchor='nw')
-        
 
         self.frameprin = tk.Frame(self.juego3)
-        self.frameprin.place(x=515, y=290)
+        self.frameprin.place(x=555, y=250)
 
         self.turno = self.jugador1
 
-        self.mostrar1 = tk.Label(self.juego3, text = "Jugador1", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar2 = tk.Label(self.juego3, text = "Jugador2", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar2.pack()
-        self.mostrar3 = tk.Label(self.juego3, text = "Jugador3", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar3.pack()
+        self.mostrar1 = tk.Label(self.juego3, text = "Jugador1", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar1.place(x=60,y=180)
+        self.mostrar2 = tk.Label(self.juego3, text = "Jugador2", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar2.place(x=1200,y=180)
+        self.mostrar3 = tk.Label(self.juego3, text = "Jugador3", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar3.place(x=1195,y=550)
 
         self.comer = True
         self.coma4 = False
@@ -1278,7 +1280,7 @@ class OnevsOnevsOne:
         self.imagenOCU2 = self.imagenOCU2.resize((90, 150))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
         self.botonrobar = tk.Button(self.juego3, width=90, height=150, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=740, y=290)
+        self.botonrobar.place(x=730, y=250)
 
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
@@ -1295,10 +1297,10 @@ class OnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador1:
-            self.mostrar1.pack()
-            self.mostrar2.pack_forget()
-            self.mostrar3.pack_forget()
-            self.canvas.place(x=50, y = 500)
+            self.mostrar1.configure(fg="Yellow")
+            self.mostrar2.configure(fg="black")
+            self.mostrar3.configure(fg="black")
+            self.canvas.place(x=0, y = 570)
             self.canvas2.place_forget()
             self.canvas3.place_forget()
             self.scrollbar2.pack_forget()
@@ -1323,12 +1325,12 @@ class OnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador2:
-            self.mostrar2.pack()
-            self.mostrar1.pack_forget()
-            self.mostrar3.pack_forget()
+            self.mostrar2.configure(fg="Yellow")
+            self.mostrar1.configure(fg="black")
+            self.mostrar3.configure(fg="black")
             self.canvas.place_forget()
             self.canvas3.place_forget()
-            self.canvas2.place(x=50, y = 500)
+            self.canvas2.place(x=0, y = 570)
             self.scrollbar.pack_forget()
             self.scrollbar3.pack_forget()
             self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1351,12 +1353,12 @@ class OnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador3:
-            self.mostrar3.pack()
-            self.mostrar2.pack_forget()
-            self.mostrar1.pack_forget()
+            self.mostrar3.configure(fg="Yellow")
+            self.mostrar2.configure(fg="black")
+            self.mostrar1.configure(fg="black")
             self.canvas.place_forget()
             self.canvas2.place_forget()
-            self.canvas3.place(x=50, y = 500)
+            self.canvas3.place(x=0, y = 570)
             self.scrollbar.pack_forget()
             self.scrollbar2.pack_forget()
             self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1950,7 +1952,7 @@ class OnevsOnevsOne:
             self.juego3.destroy()
             MenuInicio()
             return
-        
+
 """
 Nombre: OnevsOnevsOnevsOne
 Entradas:
@@ -1962,7 +1964,13 @@ class OnevsOnevsOnevsOne:
         self.juego4 = Tk()
         self.juego4.attributes("-fullscreen",True)
         self.juego4.title("Juego 1vs1vs1vs1")
-        self.juego4.config(bg = "red4")
+        self.imagen = Image.open("./Fondos/Fondo4jugadores.png")
+        ancho = self.juego4.winfo_screenwidth()
+        alto = self.juego4.winfo_screenheight()
+        self.imagen = self.imagen.resize((ancho,alto))
+        self.imagen= ImageTk.PhotoImage(self.imagen)
+        self.label_imagen = tk.Label(self.juego4, image = self.imagen)
+        self.label_imagen.place(x=0, y=0, relheight = 1, relwidth = 1)
         self.baraja = Mazo()
         self.baraja.mezclar()
         self.principal = []
@@ -1975,8 +1983,8 @@ class OnevsOnevsOnevsOne:
         self.colorEscogido = None
         self.reversa = False
 
-        self.reiniciar = tk.Button(self.juego4, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
-        self.reiniciar.place(x=50, y= 500)
+        self.reiniciar = tk.Button(self.juego4, text="Reiniciar", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=620, y= 150)
         self.empezarjuego()
         self.juego4.mainloop()
     
@@ -2003,29 +2011,29 @@ class OnevsOnevsOnevsOne:
             self.jugador4 +=[self.baraja.mazo.pop(1)]
 
         self.principal += [self.baraja.mazo.pop(1)]
-        self.canvas = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas.place(x=50, y = 500)
+        self.canvas = tk.Canvas(self.juego4, width = 960, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas.place(x=50, y = 570)
         self.canvas.config(highlightthickness=0)
         self.scrollbar = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas.xview)
         self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.configure(xscrollcommand=self.scrollbar.set)
 
-        self.canvas2 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas2.place(x=50, y = 500)
+        self.canvas2 = tk.Canvas(self.juego4, width = 960, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas2.place(x=50, y = 570)
         self.canvas2.config(highlightthickness=0)
         self.scrollbar2 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas2.xview)
         self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
 
-        self.canvas3 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas3.place(x=50, y = 500)
+        self.canvas3 = tk.Canvas(self.juego4, width = 960, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas3.place(x=50, y = 570)
         self.canvas3.config(highlightthickness=0)
         self.scrollbar3 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas3.xview)
         self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas3.configure(xscrollcommand=self.scrollbar3.set)
 
-        self.canvas4 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
-        self.canvas4.place(x=50, y = 500)
+        self.canvas4 = tk.Canvas(self.juego4, width = 960, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas4.place(x=50, y = 570)
         self.canvas4.config(highlightthickness=0)
         self.scrollbar4 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas4.xview)
         self.scrollbar4.pack(side=tk.BOTTOM, fill=tk.X)
@@ -2038,20 +2046,21 @@ class OnevsOnevsOnevsOne:
         self.framejug3= tk.Frame(self.canvas3, width=700, height = 200, bg="red4")
         self.canvas3.create_window((20, 20), window=self.framejug3, anchor='nw')
         self.framejug4= tk.Frame(self.juego4, width= 700, height = 200, bg="red4")
-        self.canvas3.create_window((20, 20), window=self.framejug4, anchor='nw')
+        self.canvas4.create_window((20, 20), window=self.framejug4, anchor='nw')
 
         self.frameprin = tk.Frame(self.juego4)
-        self.frameprin.pack(expand = True)
+        self.frameprin.place(x=555,y=235)
 
         self.turno = self.jugador1
 
-        self.mostrar1 = tk.Label(self.juego4, text = "Jugador1", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar2 = tk.Label(self.juego4, text = "Jugador2", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar2.pack()
-        self.mostrar3 = tk.Label(self.juego4, text = "Jugador3", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar3.pack()
-        self.mostrar4 = tk.Label(self.juego4, text = "Jugador4", bg = "red4" , fg = "black", font = ("Impact",15))
-        self.mostrar4.pack()
+        self.mostrar1 = tk.Label(self.juego4, text = "Jugador1", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar1.place(x=60,y=180)
+        self.mostrar2 = tk.Label(self.juego4, text = "Jugador2", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar2.place(x=1200,y=180)
+        self.mostrar3 = tk.Label(self.juego4, text = "Jugador3", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar3.place(x=1195,y=550)
+        self.mostrar4 = tk.Label(self.juego4, text = "Jugador4", bg = "red4" , fg = "black", font = ("Impact",20))
+        self.mostrar4.place(x=60,y=550)
 
         self.comer = True
         self.coma4 = False
@@ -2059,10 +2068,10 @@ class OnevsOnevsOnevsOne:
         self.comio4 = False
 
         self.imagenOCU2 = Image.open("./Cartas/Carta_Oculta.png")
-        self.imagenOCU2 = self.imagenOCU2.resize((170, 270  ))
+        self.imagenOCU2 = self.imagenOCU2.resize((90, 150))
         self.imagenOCU2 = ImageTk.PhotoImage(self.imagenOCU2)
-        self.botonrobar = tk.Button(self.juego4, width=170, height=270, image=self.imagenOCU2 , command = self.robarjug)
-        self.botonrobar.place(x=30, y=350)
+        self.botonrobar = tk.Button(self.juego4, width=90, height=150, image=self.imagenOCU2 , command = self.robarjug)
+        self.botonrobar.place(x=727, y=235)
 
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
@@ -2080,11 +2089,11 @@ class OnevsOnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador1:
-            self.mostrar1.pack()
-            self.mostrar2.pack_forget()
-            self.mostrar3.pack_forget()
-            self.mostrar4.pack_forget()
-            self.canvas.place(x=50, y = 500)
+            self.mostrar1.configure(fg="Yellow")
+            self.mostrar2.configure(fg="black")
+            self.mostrar3.configure(fg="black")
+            self.mostrar4.configure(fg="black")
+            self.canvas.place(x=200, y = 570)
             self.canvas2.place_forget()
             self.canvas3.place_forget()
             self.canvas4.place_forget()
@@ -2095,7 +2104,7 @@ class OnevsOnevsOnevsOne:
             for n in range(len(self.jugador1)):
                 carta = self.jugador1[n]
                 imagen = carta.construirimagen()
-                self.label1 = tk.Label(self.framejug1,image = imagen, width = 115, height = 180)
+                self.label1 = tk.Label(self.framejug1,image = imagen, width = 90, height = 150)
                 self.label1.grid(row= 0, column = n)
                 self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
             self.framejug1.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
@@ -2111,12 +2120,11 @@ class OnevsOnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador2:
-            self.mostrar2.pack()
-            self.mostrar1.pack_forget()
-            self.mostrar3.pack_forget()
-            self.mostrar4.pack_forget()
-
-            self.canvas2.place(x=50, y = 500)
+            self.mostrar2.configure(fg="Yellow")
+            self.mostrar1.configure(fg="black")
+            self.mostrar3.configure(fg="black")
+            self.mostrar4.configure(fg="black")
+            self.canvas2.place(x=200, y = 570)
             self.canvas4.place_forget()
             self.canvas.place_forget()
             self.canvas3.place_forget()
@@ -2128,7 +2136,7 @@ class OnevsOnevsOnevsOne:
             for n in range(len(self.jugador2)):
                 carta = self.jugador2[n]
                 imagen = carta.construirimagen()
-                self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
+                self.label2 = tk.Label(self.framejug2,image = imagen, width = 90, height = 150)
                 self.label2.grid(row= 0, column = n)
                 self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
             self.framejug2.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
@@ -2144,22 +2152,22 @@ class OnevsOnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador3:
-            self.mostrar3.pack()
-            self.mostrar2.pack_forget()
-            self.mostrar1.pack_forget()
-            self.mostrar4.pack_forget()
-            self.canvas3.place(x=50, y = 500)
+            self.mostrar3.configure(fg="Yellow")
+            self.mostrar1.configure(fg="black")
+            self.mostrar2.configure(fg="black")
+            self.mostrar4.configure(fg="black")
+            self.canvas3.place(x=200, y = 570)
             self.canvas2.place_forget()
             self.canvas.place_forget()
             self.canvas4.place_forget()
-            self.scrollbar4.place_forget()
+            self.scrollbar4.pack_forget()
             self.scrollbar2.pack_forget()
             self.scrollbar.pack_forget()
             self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador3)):
                 carta = self.jugador3[n]
                 imagen = carta.construirimagen()
-                self.label3= tk.Label(self.framejug3,image = imagen, width = 115, height = 180)
+                self.label3= tk.Label(self.framejug3,image = imagen, width = 90, height = 150)
                 self.label3.grid(row= 0, column = n)
                 self.label3.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
             self.framejug3.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
@@ -2175,22 +2183,22 @@ class OnevsOnevsOnevsOne:
             widget.destroy() 
 
         if self.turno == self.jugador4:
-            self.mostrar4.pack()
-            self.mostrar2.pack_forget()
-            self.mostrar1.pack_forget()
-            self.mostrar3.pack_forget()
-            self.canvas4.place(x=50, y = 500)
+            self.mostrar4.configure(fg="Yellow")
+            self.mostrar1.configure(fg="black")
+            self.mostrar3.configure(fg="black")
+            self.mostrar2.configure(fg="black")
+            self.canvas4.place(x=200, y = 570)
             self.canvas2.place_forget()
             self.canvas3.place_forget()
             self.canvas.place_forget()
-            self.canvas.pack_forget()
+            self.scrollbar.pack_forget()
             self.scrollbar2.pack_forget()
             self.scrollbar3.pack_forget()
             self.scrollbar4.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador4)):
                 carta = self.jugador4[n]
                 imagen = carta.construirimagen()
-                self.label4= tk.Label(self.framejug4,image = imagen, width = 115, height = 180)
+                self.label4= tk.Label(self.framejug4,image = imagen, width = 90, height = 150)
                 self.label4.grid(row= 0, column = n)
                 self.label4.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
             self.framejug4.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
@@ -2207,7 +2215,7 @@ class OnevsOnevsOnevsOne:
 
         ultimacarta = self.principal[-1]
         imagen = ultimacarta.construirimagen()
-        self.label = tk.Label(self.frameprin,image = imagen, width = 115, height = 180)
+        self.label = tk.Label(self.frameprin,image = imagen, width = 90, height = 150)
         self.label.pack()
     """
     Nombre: actualizarinterfaz
