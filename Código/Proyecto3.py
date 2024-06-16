@@ -240,9 +240,21 @@ class OnevsCPU:
         self.principal = []
         self.contador = 0
         self.colorEscogido = None
-    
+
+        self.reiniciar = tk.Button(self.juego1, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=50, y= 500)
         self.empezarjuego()
         self.juego1.mainloop()
+    
+    """
+    Nombre: reiniciar
+    Entradas:
+    Salidas: reinicia el juego, volviendo a seleccionar el modo de juego y ordenando aleatoriamente las cartas
+    Restricciones:
+    """
+    def reiniciar(self):
+        self.juego1.destroy()
+        Config()
     """
     Nombre: empezarjuego
     Entradas:
@@ -699,8 +711,20 @@ class OnevsOne:
         self.contador = 0
         self.colorEscogido = None
 
+        self.reiniciar = tk.Button(self.juego2, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=50, y= 500)
         self.empezarjuego()
         self.juego2.mainloop()
+    
+    """
+    Nombre: reiniciar
+    Entradas:
+    Salidas: reinicia el juego, volviendo a seleccionar el modo de juego y ordenando aleatoriamente las cartas
+    Restricciones:
+    """
+    def reiniciar(self):
+        self.juego2.destroy()
+        Config()
     """
     Nombre: empezarjuego
     Entradas:
@@ -1177,8 +1201,20 @@ class OnevsOnevsOne:
         self.colorEscogido = None
         self.reversa = False
 
+        self.reiniciar = tk.Button(self.juego3, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=50, y= 500)
         self.empezarjuego()
         self.juego3.mainloop()
+    
+    """
+    Nombre: reiniciar
+    Entradas:
+    Salidas: reinicia el juego, volviendo a seleccionar el modo de juego y ordenando aleatoriamente las cartas
+    Restricciones:
+    """
+    def reiniciar(self):
+        self.juego3.destroy()
+        Config()
     """
     Nombre: empezarjuego
     Entradas:
@@ -1274,6 +1310,8 @@ class OnevsOnevsOne:
                 self.label1 = tk.Label(self.framejug1,image = imagen, width = 90, height = 150)
                 self.label1.grid(row= 0, column = n)
                 self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug1.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas.config(scrollregion=self.canvas.bbox("all"))
     """
     Nombre: mostrarcartasjugador2
     Entradas:
@@ -1300,6 +1338,8 @@ class OnevsOnevsOne:
                 self.label2 = tk.Label(self.framejug2,image = imagen, width = 90, height = 150)
                 self.label2.grid(row= 0, column = n)
                 self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug2.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas2.config(scrollregion=self.canvas2.bbox("all"))
     """
     Nombre: mostrarcartasjugador3
     Entradas:
@@ -1326,6 +1366,8 @@ class OnevsOnevsOne:
                 self.label3= tk.Label(self.framejug3,image = imagen, width = 90, height = 150)
                 self.label3.grid(row= 0, column = n)
                 self.label3.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug3.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas3.config(scrollregion=self.canvas3.bbox("all"))
     """
     Nombre: mostrarprincipal
     Entradas:
@@ -1933,8 +1975,20 @@ class OnevsOnevsOnevsOne:
         self.colorEscogido = None
         self.reversa = False
 
+        self.reiniciar = tk.Button(self.juego4, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.reiniciar)
+        self.reiniciar.place(x=50, y= 500)
         self.empezarjuego()
         self.juego4.mainloop()
+    
+    """
+    Nombre: reiniciar
+    Entradas:
+    Salidas: reinicia el juego, volviendo a seleccionar el modo de juego y ordenando aleatoriamente las cartas
+    Restricciones:
+    """
+    def reiniciar(self):
+        self.juego4.destroy()
+        Config()
     """
     Nombre: empezarjuego
     Entradas:
@@ -2044,6 +2098,8 @@ class OnevsOnevsOnevsOne:
                 self.label1 = tk.Label(self.framejug1,image = imagen, width = 115, height = 180)
                 self.label1.grid(row= 0, column = n)
                 self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug1.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas.config(scrollregion=self.canvas.bbox("all"))
     """
     Nombre: mostrarcartasjugador2
     Entradas:
@@ -2075,6 +2131,8 @@ class OnevsOnevsOnevsOne:
                 self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
                 self.label2.grid(row= 0, column = n)
                 self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug2.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas2.config(scrollregion=self.canvas2.bbox("all"))
     """
     Nombre: mostrarcartasjugador3
     Entradas:
@@ -2104,6 +2162,8 @@ class OnevsOnevsOnevsOne:
                 self.label3= tk.Label(self.framejug3,image = imagen, width = 115, height = 180)
                 self.label3.grid(row= 0, column = n)
                 self.label3.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug3.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas3.config(scrollregion=self.canvas3.bbox("all"))
     """
     Nombre: mostrarcartasjugador4
     Entradas:
@@ -2133,6 +2193,8 @@ class OnevsOnevsOnevsOne:
                 self.label4= tk.Label(self.framejug4,image = imagen, width = 115, height = 180)
                 self.label4.grid(row= 0, column = n)
                 self.label4.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
+            self.framejug4.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+            self.canvas4.config(scrollregion=self.canvas4.bbox("all"))
     """
     Nombre: mostrarprincipal
     Entradas:
