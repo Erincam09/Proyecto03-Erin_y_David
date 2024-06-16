@@ -4,6 +4,12 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import random, time
 
+"""
+Nombre: MenuInicio
+Entradas: 
+Salidas: Muestra la ventana inicial del juego, se muestran los botones de iniciar y salir 
+Restricciones:
+"""
 class MenuInicio: 
     def __init__(self):
         self.inicio = Tk()
@@ -24,12 +30,30 @@ class MenuInicio:
 
         self.inicio.mainloop()
 
+    """
+    Nombre: MenuInicio
+    Entradas: 
+    Salidas: Muestra la ventana inicial del juego, se muestran los botones de iniciar y salir 
+    Restricciones:
+    """
     def salir(self):
         self.inicio.destroy()
-
+    """
+    Nombre: salirConfig
+    Entradas:
+    Salidas: Cierra la ventana de inicio y abre las configuraciones
+    Restricciones:
+    """
     def salirConfig(self):
         self.inicio.destroy()
         Config()
+
+"""
+Nombre: Config
+Entradas:
+Salidas: Es la ventana de configuraciones en donde se pueden elegir los distintos modos de juego
+Restricciones:
+"""
 class Config:
     def __init__(self):
         self.menu_config = Tk()
@@ -66,20 +90,61 @@ class Config:
         self.jug_4 = tk.Button(self.menu_config, width=120, height=200, image=self.imagenC4, command = self.iramodo4)
         self.jug_4.place(x=250, y=350)
 
+        self.volver= tk.Button(self.menu_config, text="Volver", bg="black", font=("Courier New", 15), fg="white", width=10, command=self.volver)
+        self.volver.place(x=865, y=555)
+
         self.menu_config.mainloop()
-    
+    """
+    Nombre: volver
+    Entradas:
+    Salidas: Se destruye la ventana de configuraciones y se abre la ventana principal, volver
+    Restricciones:
+    """
+    def volver(self):
+        self.menu_config.destroy()
+        MenuInicio()
+    """
+    Nombre: iramodo1
+    Entradas:
+    Salidas: Se destruye la ventana de configuraciones y se abre la ventana de uno contra computadora
+    Restricciones:
+    """
     def iramodo1(self):
         self.menu_config.destroy()
         OnevsCPU()
+    """
+    Nombre: iramodo2
+    Entradas:
+    Salidas: Se destruye la ventana de configuraciones y se abre la ventana de uno contra uno
+    Restricciones:
+    """
     def iramodo2(self):
         self.menu_config.destroy()
         OnevsOne()
+    """
+    Nombre: iramodo3
+    Entradas:
+    Salidas: Se destruye la ventana de configuraciones y se abre la ventana de juego de 3 jugadores
+    Restricciones:
+    """
     def iramodo3(self):
         self.menu_config.destroy()
         OnevsOnevsOne()
+    """
+    Nombre: iramodo4
+    Entradas:
+    Salidas: Se destruye la ventana de configuraciones y se abre la ventana de juego de 4 jugadores
+    Restricciones:
+    """
     def iramodo4(self):
         self.menu_config.destroy()
         OnevsOnevsOnevsOne()
+"""
+Nombre: Cartas
+Entradas: color, numero
+Salidas: En esta clase se crean todas las cartas segun su color o numero
+Restricciones:
+"""
 class Cartas:
     def __init__(self,color,numero):
 
@@ -88,12 +153,24 @@ class Cartas:
         self.ruta = f"./Cartas/{self.color}_{self.numero}.png"
         
         self.imagen = None
-
+    """
+    Nombre: construirimagen
+    Entradas: 
+    Salidas: Busca la imagen y la ajusta
+    Restricciones:
+    """
     def construirimagen(self):
         self.imagen = Image.open(self.ruta)
         self.imagen =  self.imagen.resize((90,150))
         self.imagen = ImageTk.PhotoImage(self.imagen)
         return self.imagen
+
+"""
+Nombre: Mazo
+Entradas:
+Salidas: Manda a crear las cartas y las hace un mazo en forma de lista
+Restricciones:
+"""
 class Mazo:
     def __init__(self):
         self.mazo = []
@@ -106,7 +183,12 @@ class Mazo:
         self.cartaextra = ["Toma4","CambioColor"]
 
         self.crearobjetosmazo()
-        
+    """
+    Nombre: crearobjetosmazo
+    Entradas:
+    Salidas: crea los objetos de cartas en un mazo segun el numero,comodin y color
+    Restricciones:
+    """   
     def crearobjetosmazo (self):
         
         for color in self.listacolores:
@@ -129,9 +211,22 @@ class Mazo:
             for extra in self.cartaextra:
                 carta = Cartas(color,extra)
                 self.mazo+=[carta]
+    """
+    Nombre: mezclar
+    Entradas:
+    Salidas: mezcla el mazo de cartas 
+    Restricciones:
+    """ 
 
     def mezclar(self):
         random.shuffle(self.mazo) 
+
+"""
+Nombre: OnevsCPU
+Entradas:
+Salidas: Dirige a la ventana de juego de uno contra la computadora
+Restricciones:
+"""
 class OnevsCPU:
     def __init__(self):
         self.juego1 = Tk()
@@ -154,6 +249,12 @@ class OnevsCPU:
     
         self.empezarjuego()
         self.juego1.mainloop()
+    """
+    Nombre: empezarjuego
+    Entradas:
+    Salidas: crea las barajas de cartas, los frames y canvas de cada jugador, inicializa el juego
+    Restricciones:
+    """
     def empezarjuego(self):
         for j in range(7):
             self.jugador +=[self.baraja.mazo.pop(1)]
@@ -198,7 +299,12 @@ class OnevsCPU:
         self.mostrarcartasjugador()
         self.mostrarcartascomputadora()
         self.mostrarprincipal()
-
+    """
+    Nombre: mostrarcartasjugador
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador
+    Restricciones:
+    """
     def mostrarcartasjugador(self):
         for widget in self.framejug.winfo_children():
             widget.destroy() 
@@ -212,7 +318,12 @@ class OnevsCPU:
         
         self.framejug.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
-
+    """
+    Nombre: mostrarcartascomputadora
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja de la computadora
+    Restricciones:
+    """
     def mostrarcartascomputadora(self):
 
         for widget in self.framecomp.winfo_children():
@@ -221,7 +332,12 @@ class OnevsCPU:
         for n in range(len(self.computadora)):
             self.label2 = tk.Label(self.framecomp,image = self.imagenOCU, width = 90, height = 150)
             self.label2.grid(row= 0, column = n)
-
+    """
+    Nombre: mostrarprincipal
+    Entradas:
+    Salidas: Muestra las cartas de la baraja principal
+    Restricciones:
+    """
     def mostrarprincipal(self):
         for widget in self.frameprin.winfo_children():
             widget.destroy()
@@ -230,13 +346,23 @@ class OnevsCPU:
         imagen = ultimacarta.construirimagen()
         self.label3 = tk.Label(self.frameprin,image = imagen, width = 90, height = 150)
         self.label3.pack()
-
+    """
+    Nombre: actualizarinterfaz
+    Entradas:
+    Salidas: Llama las funciones de mostrar cartas, actualizando la interfaz
+    Restricciones:
+    """
     def actualizarinterfaz(self):
         self.mostrarprincipal()
         self.mostrarcartasjugador()
         self.mostrarcartascomputadora()
         
-    
+    """
+    Nombre: robarjug
+    Entradas:
+    Salidas: Permite al jugador comer cartas en caso de no tener la que se necesite
+    Restricciones:
+    """
     def robarjug(self):
         self.comer = True
         ultimacarta = self.principal[-1]
@@ -260,7 +386,12 @@ class OnevsCPU:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-
+    """
+    Nombre: mezclarprincipal
+    Entradas:
+    Salidas: Mezcla las cartas de la baraja principal y las deposita en el mazo de comer
+    Restricciones:
+    """
     def mezclarprincipal(self):
         if len(self.principal)>1: 
             ultimacarta = self.principal[-1]
@@ -269,7 +400,12 @@ class OnevsCPU:
                     self.baraja.mazo+=[elemento]
                     self.principal.remove(elemento)
             random.shuffle(self.baraja.mazo)
-    
+    """
+    Nombre: robarcompu
+    Entradas:
+    Salidas: Permite a la computadora comer cartas en caso de no tener la carta necesaria
+    Restricciones:
+    """
     def robarcompu(self):
         if len(self.baraja.mazo) > 0:
             self.computadora+=[self.baraja.mazo.pop()]
@@ -280,7 +416,12 @@ class OnevsCPU:
             self.computadora+=[self.baraja.mazo.pop()]
             self.actualizarinterfaz()
             self.turnocompu()
-
+    """
+    Nombre: validarcarta
+    Entradas: carta
+    Salidas: Valida si la carta presionada tiene el numero o el color con el que se debe jugar
+    Restricciones:
+    """
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turnojug == True: 
@@ -295,7 +436,12 @@ class OnevsCPU:
                 self.validarreglasticas(carta)
                 self.cartaFinal()
                 self.validarGane()
-
+    """
+    Nombre: validarreglasticas
+    Entradas: carta
+    Salidas: valida las reglas ticas, ya sea bloqueo, reversa, cambio de color, toma2 o toma4
+    Restricciones:
+    """
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa" or carta.numero == "Bloqueo":
             if self.turnojug == False:
@@ -389,7 +535,12 @@ class OnevsCPU:
                 self.actualizarinterfaz()
                 print("tURNO COMP EN ESPERA")
                 self.turnocompu()
-
+    """
+    Nombre: elegir
+    Entradas:
+    Salidas: Muestra una ventana en la que se puede elegir el color con el que se seguira jugando
+    Restricciones:
+    """
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -430,7 +581,12 @@ class OnevsCPU:
         self.colorVerde.place(x=530, y=120)
 
         self.elegirColor.mainloop()
-    
+    """
+    Nombre: cambiarcolor
+    Entradas: colorEscogido
+    Salidas: Segun el color escogido anteriormente, se cambia el atributo de color de la ultima carta en el mazo principal
+    Restricciones:
+    """
     def cambiarcolor(self, colorEscogido):
         if self.turnojug == False:
             self.elegirColor.destroy()
@@ -448,7 +604,12 @@ class OnevsCPU:
             self.turnojug = True
 
         return ultimacarta.color
-       
+    """
+    Nombre: comercarta
+    Entradas: cantidad
+    Salidas: Hace que el jugador coma la cantidad de cartas ingresada
+    Restricciones:
+    """
     def comercarta(self, cantidad):
         if len(self.baraja.mazo) > 0:
             if self.turnojug == True:
@@ -470,7 +631,12 @@ class OnevsCPU:
 
 
         self.actualizarinterfaz()
-
+    """
+    Nombre: turnocompu
+    Entradas:
+    Salidas: Tira una carta de la baraja de la computadora que tenga el color o el numero que se pide
+    Restricciones:
+    """
     def turnocompu(self):
         ultimacarta = self.principal[-1]
         if self.turnojug == False:
@@ -488,7 +654,12 @@ class OnevsCPU:
                     return
             
             self.robarcompu()
-
+    """
+    Nombre: cartaFinal
+    Entradas:
+    Salidas: Valida cuando a los jugadores les queda una carta restante
+    Restricciones:
+    """
     def cartaFinal(self):
         if len(self.jugador)==1:
             messagebox.showinfo("¡UNO!","Te queda una carta restante")
@@ -496,7 +667,13 @@ class OnevsCPU:
         elif len(self.computadora)==1:
             messagebox.showinfo("¡UNO!","A tu oponente le queda una carta")
             return
-
+    
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
     def validarGane(self):
         if self.jugador == []:
             messagebox.showinfo("Victoria","¡Felicidades, Has ganado!")
@@ -508,6 +685,20 @@ class OnevsCPU:
             self.juego1.destroy()
             MenuInicio()
             return
+
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
+  
+"""
+Nombre: OnevsOne
+Entradas:
+Salidas: Dirige a la ventana de juego de 2 jugadores
+Restricciones:
+"""
 class OnevsOne:
     def __init__(self):
         self.juego2 = Tk()
@@ -530,18 +721,23 @@ class OnevsOne:
 
         self.empezarjuego()
         self.juego2.mainloop()
-    
+    """
+    Nombre: empezarjuego
+    Entradas:
+    Salidas: crea las barajas de cartas, los frames y canvas de cada jugador, inicializa el juego
+    Restricciones:
+    """
     def empezarjuego(self):
         for j in range(7):
             self.jugador1 +=[self.baraja.mazo.pop(1)]
             self.jugador2 +=[self.baraja.mazo.pop(1)]
         self.principal += [self.baraja.mazo.pop(1)]
 
-        self.canvas2= tk.Canvas(self.juego2, width = 1120, height = 185, bg = "red4", scrollregion=(0, 0, 800, 800)) 
+        self.canvas2= tk.Canvas(self.juego2, width = 1120, height = 185, bg = "red4", scrollregion=(0, 0, 1000, 800)) 
         self.canvas2.place(x=235, y=0)
         self.canvas2.config(highlightthickness=0)
 
-        self.canvas = tk.Canvas(self.juego2, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 800, 800))  
+        self.canvas = tk.Canvas(self.juego2, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
         self.canvas.place(x=0, y = 570)
         self.canvas.config(highlightthickness=0)
 
@@ -553,7 +749,7 @@ class OnevsOne:
         self.scrollbar2.pack(side=tk.TOP, fill=tk.X)
         self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
 
-        self.framejug1 = tk.Frame(self.canvas, width=700, height = 185, bg="red4") 
+        self.framejug1 = tk.Frame(self.canvas, width=700, height = 200, bg="red4") 
         self.canvas.create_window((20, 20), window=self.framejug1, anchor=tk.NW)
 
         self.framejug2= tk.Frame(self.canvas2,bg="red4",  width=700, height = 200)
@@ -582,7 +778,12 @@ class OnevsOne:
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
         self.mostrarprincipal()
-
+    """
+    Nombre: mostrarcartasjugador1
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 1
+    Restricciones:
+    """
     def mostrarcartasjugador1(self):
         for widget in self.framejug1.winfo_children():
             widget.destroy() 
@@ -593,11 +794,19 @@ class OnevsOne:
             if self.turnojug1 == True:
                 self.label1 = tk.Label(self.framejug1,image = imagen, width = 90, height = 150)
                 self.label1.grid(row= 0, column = n)
+                self.framejug1.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+                self.canvas.config(scrollregion=self.canvas.bbox("all"))
             else:
                 self.label1 = tk.Label(self.framejug1,image =self.imagenOCU, width = 90, height = 150)
                 self.label1.grid(row= 0, column = n)
             self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-    
+            
+    """
+    Nombre: mostrarcartasjugador2
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 2
+    Restricciones:
+    """
     def mostrarcartasjugador2(self):
         for widget in self.framejug2.winfo_children():
             widget.destroy() 
@@ -608,12 +817,20 @@ class OnevsOne:
             if self.turnojug2 == True:
                 self.label2 = tk.Label(self.framejug2,image = imagen, width = 90, height = 150)
                 self.label2.grid(row= 0, column = n)
+                self.framejug2.update_idletasks()  # Para asegurar que el framejug tiene el tamaño correcto
+                self.canvas2.config(scrollregion=self.canvas2.bbox("all"))
             else:
                 self.label2 = tk.Label(self.framejug2,image = self.imagenOCU, width = 90, height = 150)
                 self.label2.grid(row= 0, column = n)
 
             self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
 
+    """
+    Nombre: mostrarprincipal
+    Entradas:
+    Salidas: Muestra las cartas de la baraja principal
+    Restricciones:
+    """    
     def mostrarprincipal(self):
         for widget in self.frameprin.winfo_children():
             widget.destroy()
@@ -622,12 +839,22 @@ class OnevsOne:
         imagen = ultimacarta.construirimagen()
         self.label3 = tk.Label(self.frameprin,image = imagen, width = 90, height = 150)
         self.label3.pack()
-
+    """
+    Nombre: actualizarinterfaz
+    Entradas:
+    Salidas: Llama las funciones de mostrar cartas, actualizando la interfaz
+    Restricciones:
+    """
     def actualizarinterfaz(self):
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
         self.mostrarprincipal()
-    
+    """
+    Nombre: robarjug
+    Entradas:
+    Salidas: Permite al jugador comer cartas en caso de no tener la que se necesite
+    Restricciones:
+    """
     def robarjug(self):
         self.comer = True
         ultimacarta = self.principal[-1]
@@ -656,7 +883,12 @@ class OnevsOne:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-
+    """
+    Nombre: mezclarprincipal
+    Entradas:
+    Salidas: Mezcla las cartas de la baraja principal y las deposita en el mazo de comer
+    Restricciones:
+    """
     def mezclarprincipal(self):
         if len(self.principal)>1: 
             ultimacarta = self.principal[-1]
@@ -665,7 +897,12 @@ class OnevsOne:
                     self.baraja.mazo+=[elemento]
                     self.principal.remove(elemento)
             random.shuffle(self.baraja.mazo)
-
+    """
+    Nombre: validarcarta
+    Entradas: carta
+    Salidas: Valida si la carta presionada tiene el numero o el color con el que se debe jugar
+    Restricciones:
+    """
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turnojug1 == True and self.turnojug2 == False: 
@@ -733,7 +970,12 @@ class OnevsOne:
                     self.actualizarinterfaz()
                     self.cartaFinal()
                     self.validarGane()
-
+    """
+    Nombre: validarreglasticas
+    Entradas: carta
+    Salidas: valida las reglas ticas, ya sea bloqueo, reversa, cambio de color, toma2 o toma4
+    Restricciones:
+    """
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa" or carta.numero == "Bloqueo":
             if self.turnojug2 == False:
@@ -810,7 +1052,12 @@ class OnevsOne:
                 self.elegir()
             elif self.turnojug2 == False:
                 self.elegir()
-
+    """
+    Nombre: elegir
+    Entradas:
+    Salidas: Muestra una ventana en la que se puede elegir el color con el que se seguira jugando
+    Restricciones:
+    """
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -852,6 +1099,12 @@ class OnevsOne:
 
         self.elegirColor.mainloop()
     
+    """
+    Nombre: cambiarcolor
+    Entradas: colorEscogido
+    Salidas: Segun el color escogido anteriormente, se cambia el atributo de color de la ultima carta en el mazo principal
+    Restricciones:
+    """   
     def cambiarcolor(self, colorEscogido):
         self.elegirColor.destroy()
         
@@ -875,7 +1128,12 @@ class OnevsOne:
                 self.coma4 = False
         self.actualizarinterfaz()
         messagebox.showinfo("Nuevo", f"El nuevo color es : {ultimacarta.color}")
-
+    """
+    Nombre: comercarta
+    Entradas: cantidad
+    Salidas: Hace que el jugador coma la cantidad de cartas ingresada
+    Restricciones:
+    """
     def comercarta(self, cantidad):
         if len(self.baraja.mazo)==0:
             self.mezclarprincipal()
@@ -888,7 +1146,12 @@ class OnevsOne:
             else:
                 for x in range(cantidad):
                     self.jugador2 +=[self.baraja.mazo.pop()]
-
+    """
+    Nombre: cartaFinal
+    Entradas:
+    Salidas: Valida cuando a los jugadores les queda una carta restante
+    Restricciones:
+    """
     def cartaFinal(self):
         if len(self.jugador1)==1:
             messagebox.showinfo("¡UNO!","Al jugador 1 le queda una carta restante")
@@ -896,7 +1159,12 @@ class OnevsOne:
         elif len(self.jugador2)==1:
             messagebox.showinfo("¡UNO!","Al jugador 2 le queda una carta restante")
             return
-
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
     def validarGane(self):
         if self.jugador1 == []:
             messagebox.showinfo("Victoria","¡Felicidades jugador 1, has ganado!")
@@ -908,6 +1176,13 @@ class OnevsOne:
             self.juego2.destroy()
             MenuInicio()
             return
+    
+"""
+Nombre: OnevsOnevsOne
+Entradas:
+Salidas: Dirige a la ventana de juego de 3 jugadores
+Restricciones:
+"""
 class OnevsOnevsOne:
     def __init__(self):
         self.juego3 = Tk()
@@ -927,7 +1202,12 @@ class OnevsOnevsOne:
 
         self.empezarjuego()
         self.juego3.mainloop()
-
+    """
+    Nombre: empezarjuego
+    Entradas:
+    Salidas: crea las barajas de cartas, los frames y canvas de cada jugador, inicializa el juego
+    Restricciones:
+    """
     def empezarjuego(self):
         for j in range(7):
             self.jugador1 +=[self.baraja.mazo.pop(1)]
@@ -935,15 +1215,35 @@ class OnevsOnevsOne:
             self.jugador3 +=[self.baraja.mazo.pop(1)]
 
         self.principal += [self.baraja.mazo.pop(1)]
+
+        self.canvas = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas.place(x=50, y = 500)
+        self.canvas.config(highlightthickness=0)
+        self.scrollbar = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.configure(xscrollcommand=self.scrollbar.set)
+
+        self.canvas2 = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas2.place(x=50, y = 500)
+        self.canvas2.config(highlightthickness=0)
+        self.scrollbar2 = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas2.xview)
+        self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
+
+        self.canvas3 = tk.Canvas(self.juego3, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas3.place(x=50, y = 500)
+        self.canvas3.config(highlightthickness=0)
+        self.scrollbar3 = tk.Scrollbar(self.juego3, orient=tk.HORIZONTAL, command=self.canvas3.xview)
+        self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas3.configure(xscrollcommand=self.scrollbar3.set)
         
-        self.framejug1 = tk.Frame(self.juego3, width= 1000,bg="red4")
-        self.framejug1.pack(side='bottom', pady=10, padx = 10)
-    
-        self.framejug2= tk.Frame(self.juego3, width= 1000,bg="red4")
-        self.framejug2.pack(side='bottom', pady=10, padx = 10)
+        self.framejug1 = tk.Frame(self.canvas,width=700, height = 200, bg="red4")
+        self.canvas.create_window((20, 20), window=self.framejug1, anchor='nw')
+        self.framejug2= tk.Frame(self.canvas2, width=700, height = 200, bg="red4")
+        self.canvas2.create_window((20, 20), window=self.framejug2, anchor='nw')
+        self.framejug3= tk.Frame(self.canvas3, width=700, height = 200, bg="red4")
+        self.canvas3.create_window((20, 20), window=self.framejug3, anchor='nw')
         
-        self.framejug3= tk.Frame(self.juego3, width= 1000,bg="red4")
-        self.framejug3.pack(side='bottom', pady=10, padx = 10)
 
         self.frameprin = tk.Frame(self.juego3)
         self.frameprin.place(x=515, y=290)
@@ -971,7 +1271,12 @@ class OnevsOnevsOne:
         self.mostrarcartasjugador2()
         self.mostrarcartasjugador3()
         self.mostrarprincipal()
-
+    """
+    Nombre: mostrarcartasjugador1
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 1
+    Restricciones:
+    """
     def mostrarcartasjugador1(self):
         for widget in self.framejug1.winfo_children():
             widget.destroy() 
@@ -980,16 +1285,26 @@ class OnevsOnevsOne:
             self.mostrar1.pack()
             self.mostrar2.pack_forget()
             self.mostrar3.pack_forget()
-            self.framejug1.pack(side='bottom', pady=10, padx = 10)
-            self.framejug2.pack_forget()
-            self.framejug3.pack_forget()
+            self.canvas.place(x=50, y = 500)
+            self.canvas2.place_forget()
+            self.canvas3.place_forget()
+            self.scrollbar2.pack_forget()
+            self.scrollbar3.pack_forget()
+            self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador1)):
                 carta = self.jugador1[n]
                 imagen = carta.construirimagen()
                 self.label1 = tk.Label(self.framejug1,image = imagen, width = 90, height = 150)
                 self.label1.grid(row= 0, column = n)
                 self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-    
+            self.framejug1.update_idletasks()
+            self.canvas.config(scrollregion=self.canvas.bbox("all"))
+    """
+    Nombre: mostrarcartasjugador2
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 2
+    Restricciones:
+    """
     def mostrarcartasjugador2(self):
         for widget in self.framejug2.winfo_children():
             widget.destroy() 
@@ -998,16 +1313,26 @@ class OnevsOnevsOne:
             self.mostrar2.pack()
             self.mostrar1.pack_forget()
             self.mostrar3.pack_forget()
-            self.framejug1.pack_forget()
-            self.framejug2.pack(side='bottom', pady=10, padx = 10)
-            self.framejug3.pack_forget()
+            self.canvas.place_forget()
+            self.canvas3.place_forget()
+            self.canvas2.place(x=50, y = 500)
+            self.scrollbar.pack_forget()
+            self.scrollbar3.pack_forget()
+            self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador2)):
                 carta = self.jugador2[n]
                 imagen = carta.construirimagen()
                 self.label2 = tk.Label(self.framejug2,image = imagen, width = 90, height = 150)
                 self.label2.grid(row= 0, column = n)
                 self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-        
+            self.framejug2.update_idletasks()
+            self.canvas2.config(scrollregion=self.canvas2.bbox("all"))
+    """
+    Nombre: mostrarcartasjugador3
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 3
+    Restricciones:
+    """
     def mostrarcartasjugador3(self):
         for widget in self.framejug3.winfo_children():
             widget.destroy() 
@@ -1016,16 +1341,26 @@ class OnevsOnevsOne:
             self.mostrar3.pack()
             self.mostrar2.pack_forget()
             self.mostrar1.pack_forget()
-            self.framejug1.pack_forget()
-            self.framejug2.pack_forget()
-            self.framejug3.pack(side='bottom', pady=10, padx = 10)
+            self.canvas.place_forget()
+            self.canvas2.place_forget()
+            self.canvas3.place(x=50, y = 500)
+            self.scrollbar.pack_forget()
+            self.scrollbar2.pack_forget()
+            self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador3)):
                 carta = self.jugador3[n]
                 imagen = carta.construirimagen()
                 self.label3= tk.Label(self.framejug3,image = imagen, width = 90, height = 150)
                 self.label3.grid(row= 0, column = n)
                 self.label3.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-
+            self.framejug3.update_idletasks()
+            self.canvas3.config(scrollregion=self.canvas3.bbox("all"))
+    """
+    Nombre: mostrarprincipal
+    Entradas:
+    Salidas: Muestra las cartas de la baraja principal
+    Restricciones:
+    """
     def mostrarprincipal(self):
         for widget in self.frameprin.winfo_children():
             widget.destroy()
@@ -1034,13 +1369,23 @@ class OnevsOnevsOne:
         imagen = ultimacarta.construirimagen()
         self.label3 = tk.Label(self.frameprin,image = imagen, width = 90, height = 150)
         self.label3.pack()
-    
+    """
+    Nombre: actualizarinterfaz
+    Entradas:
+    Salidas: Llama las funciones de mostrar cartas, actualizando la interfaz
+    Restricciones:
+    """
     def actualizarinterfaz(self):
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
         self.mostrarcartasjugador3()
         self.mostrarprincipal()
-    
+    """
+    Nombre: robarjug
+    Entradas:
+    Salidas: Permite al jugador comer cartas en caso de no tener la que se necesite
+    Restricciones:
+    """
     def robarjug(self):
         self.comer = True
         ultimacarta = self.principal[-1]
@@ -1070,7 +1415,13 @@ class OnevsOnevsOne:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-
+                messagebox.showerror("Error","Tienes cartas disponibles para tirar")
+    """
+    Nombre: mezclarprincipal
+    Entradas:
+    Salidas: Mezcla las cartas de la baraja principal y las deposita en el mazo de comer
+    Restricciones:
+    """
     def mezclarprincipal(self):
         if len(self.principal)>1: 
             ultimacarta = self.principal[-1]
@@ -1079,7 +1430,12 @@ class OnevsOnevsOne:
                     self.baraja.mazo+=[elemento]
                     self.principal.remove(elemento)
             random.shuffle(self.baraja.mazo)
-
+    """
+    Nombre: validarcarta
+    Entradas: carta
+    Salidas: Valida si la carta presionada tiene el numero o el color con el que se debe jugar
+    Restricciones:
+    """
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turno == self.jugador1: 
@@ -1198,7 +1554,12 @@ class OnevsOnevsOne:
                     self.actualizarinterfaz()
                     self.cartaFinal()
                     self.validarGane()
-
+    """
+    Nombre: validarreglasticas
+    Entradas: carta
+    Salidas: valida las reglas ticas, ya sea bloqueo, reversa, cambio de color, toma2 o toma4
+    Restricciones:
+    """
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa":
             if self.reversa == False:
@@ -1404,7 +1765,12 @@ class OnevsOnevsOne:
 
         elif carta.numero == "CambioColor":
             self.elegir()
-
+    """
+    Nombre: elegir
+    Entradas:
+    Salidas: Muestra una ventana en la que se puede elegir el color con el que se seguira jugando
+    Restricciones:
+    """
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -1445,7 +1811,12 @@ class OnevsOnevsOne:
         self.colorVerde.place(x=530, y=120)
 
         self.elegirColor.mainloop()
-    
+    """
+    Nombre: cambiarcolor
+    Entradas: colorEscogido
+    Salidas: Segun el color escogido anteriormente, se cambia el atributo de color de la ultima carta en el mazo principal
+    Restricciones:
+    """
     def cambiarcolor(self, colorEscogido):
         self.elegirColor.destroy()
         
@@ -1506,7 +1877,12 @@ class OnevsOnevsOne:
 
         
         messagebox.showinfo("Nuevo", f"El nuevo color es : {ultimacarta.color}")
-
+    """
+    Nombre: comercarta
+    Entradas: cantidad
+    Salidas: Hace que el jugador coma la cantidad de cartas ingresada
+    Restricciones:
+    """
     def comercarta(self, cantidad):
         if len(self.baraja.mazo)==0:
             self.mezclarprincipal()
@@ -1523,8 +1899,12 @@ class OnevsOnevsOne:
             if self.turno == self.jugador3:
                 for x in range(cantidad):
                     self.jugador3 +=[self.baraja.mazo.pop()]
-
-
+    """
+    Nombre: cartaFinal
+    Entradas:
+    Salidas: Valida cuando a los jugadores les queda una carta restante
+    Restricciones:
+    """
     def cartaFinal(self):
         if len(self.jugador1)==1:
             messagebox.showinfo("¡UNO!","Al jugador 1 le queda una carta restante")
@@ -1535,7 +1915,12 @@ class OnevsOnevsOne:
         elif len(self.jugador3)==1:
             messagebox.showinfo("¡UNO!","Al jugador 3 le queda una carta restante")
             return
-
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
     def validarGane(self):
         if self.jugador1 == []:
             messagebox.showinfo("Victoria","¡Felicidades jugador 1, has ganado!")
@@ -1552,6 +1937,13 @@ class OnevsOnevsOne:
             self.juego3.destroy()
             MenuInicio()
             return
+
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
 class OnevsOnevsOnevsOne:
     def __init__(self):
         self.juego4 = Tk()
@@ -1572,7 +1964,12 @@ class OnevsOnevsOnevsOne:
 
         self.empezarjuego()
         self.juego4.mainloop()
-
+    """
+    Nombre: empezarjuego
+    Entradas:
+    Salidas: crea las barajas de cartas, los frames y canvas de cada jugador, inicializa el juego
+    Restricciones:
+    """
     def empezarjuego(self):
         for j in range(7):
             self.jugador1 +=[self.baraja.mazo.pop(1)]
@@ -1581,18 +1978,42 @@ class OnevsOnevsOnevsOne:
             self.jugador4 +=[self.baraja.mazo.pop(1)]
 
         self.principal += [self.baraja.mazo.pop(1)]
-        
-        self.framejug1 = tk.Frame(self.juego4, width= 1000,bg="red4")
-        self.framejug1.pack(side='bottom', pady=10, padx = 10)
-    
-        self.framejug2= tk.Frame(self.juego4, width= 1000,bg="red4")
-        self.framejug2.pack(side='bottom', pady=10, padx = 10)
-        
-        self.framejug3= tk.Frame(self.juego4, width= 1000,bg="red4")
-        self.framejug3.pack(side='bottom', pady=10, padx = 10)
+        self.canvas = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas.place(x=50, y = 500)
+        self.canvas.config(highlightthickness=0)
+        self.scrollbar = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.configure(xscrollcommand=self.scrollbar.set)
 
-        self.framejug4= tk.Frame(self.juego4, width= 1000,bg="red4")
-        self.framejug4.pack(side='bottom', pady=10, padx = 10)
+        self.canvas2 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas2.place(x=50, y = 500)
+        self.canvas2.config(highlightthickness=0)
+        self.scrollbar2 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas2.xview)
+        self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas2.configure(xscrollcommand=self.scrollbar2.set)
+
+        self.canvas3 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas3.place(x=50, y = 500)
+        self.canvas3.config(highlightthickness=0)
+        self.scrollbar3 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas3.xview)
+        self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas3.configure(xscrollcommand=self.scrollbar3.set)
+
+        self.canvas4 = tk.Canvas(self.juego4, width = 1130, height = 170, bg = "red4", scrollregion=(0, 0, 1000, 800))  
+        self.canvas4.place(x=50, y = 500)
+        self.canvas4.config(highlightthickness=0)
+        self.scrollbar4 = tk.Scrollbar(self.juego4, orient=tk.HORIZONTAL, command=self.canvas4.xview)
+        self.scrollbar4.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas4.configure(xscrollcommand=self.scrollbar4.set)
+        
+        self.framejug1 = tk.Frame(self.canvas,width=700, height = 200, bg="red4")
+        self.canvas.create_window((20, 20), window=self.framejug1, anchor='nw')
+        self.framejug2= tk.Frame(self.canvas2, width=700, height = 200, bg="red4")
+        self.canvas2.create_window((20, 20), window=self.framejug2, anchor='nw')
+        self.framejug3= tk.Frame(self.canvas3, width=700, height = 200, bg="red4")
+        self.canvas3.create_window((20, 20), window=self.framejug3, anchor='nw')
+        self.framejug4= tk.Frame(self.juego4, width= 700, height = 200, bg="red4")
+        self.canvas3.create_window((20, 20), window=self.framejug4, anchor='nw')
 
         self.frameprin = tk.Frame(self.juego4)
         self.frameprin.pack(expand = True)
@@ -1623,7 +2044,12 @@ class OnevsOnevsOnevsOne:
         self.mostrarcartasjugador3()
         self.mostrarcartasjugador4()
         self.mostrarprincipal()
-
+    """
+    Nombre: mostrarcartasjugador1
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 1
+    Restricciones:
+    """
     def mostrarcartasjugador1(self):
         for widget in self.framejug1.winfo_children():
             widget.destroy() 
@@ -1633,13 +2059,28 @@ class OnevsOnevsOnevsOne:
             self.mostrar2.pack_forget()
             self.mostrar3.pack_forget()
             self.mostrar4.pack_forget()
+            self.canvas.place(x=50, y = 500)
+            self.canvas2.place_forget()
+            self.canvas3.place_forget()
+            self.canvas4.place_forget()
+            self.scrollbar4.pack_forget()
+            self.scrollbar2.pack_forget()
+            self.scrollbar3.pack_forget()
+            self.scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador1)):
                 carta = self.jugador1[n]
                 imagen = carta.construirimagen()
                 self.label1 = tk.Label(self.framejug1,image = imagen, width = 115, height = 180)
                 self.label1.grid(row= 0, column = n)
                 self.label1.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-
+            self.framejug1.update_idletasks()
+            self.canvas.config(scrollregion=self.canvas.bbox("all"))
+    """
+    Nombre: mostrarcartasjugador1
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 1
+    Restricciones:
+    """
     def mostrarcartasjugador2(self):
         for widget in self.framejug2.winfo_children():
             widget.destroy() 
@@ -1649,13 +2090,30 @@ class OnevsOnevsOnevsOne:
             self.mostrar1.pack_forget()
             self.mostrar3.pack_forget()
             self.mostrar4.pack_forget()
+
+            self.canvas2.place(x=50, y = 500)
+            self.canvas4.place_forget()
+            self.canvas.place_forget()
+            self.canvas3.place_forget()
+            self.scrollbar.pack_forget()
+            self.scrollbar3.pack_forget()
+            self.scrollbar4.pack_forget()
+            self.scrollbar2.pack(side=tk.BOTTOM, fill=tk.X)
+
             for n in range(len(self.jugador2)):
                 carta = self.jugador2[n]
                 imagen = carta.construirimagen()
                 self.label2 = tk.Label(self.framejug2,image = imagen, width = 115, height = 180)
                 self.label2.grid(row= 0, column = n)
                 self.label2.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-        
+            self.framejug2.update_idletasks()
+            self.canvas2.config(scrollregion=self.canvas2.bbox("all"))
+    """
+    Nombre: mostrarcartasjugador3
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 3
+    Restricciones:
+    """
     def mostrarcartasjugador3(self):
         for widget in self.framejug3.winfo_children():
             widget.destroy() 
@@ -1665,13 +2123,28 @@ class OnevsOnevsOnevsOne:
             self.mostrar2.pack_forget()
             self.mostrar1.pack_forget()
             self.mostrar4.pack_forget()
+            self.canvas3.place(x=50, y = 500)
+            self.canvas2.place_forget()
+            self.canvas.place_forget()
+            self.canvas4.place_forget()
+            self.scrollbar4.place_forget()
+            self.scrollbar2.pack_forget()
+            self.scrollbar.pack_forget()
+            self.scrollbar3.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador3)):
                 carta = self.jugador3[n]
                 imagen = carta.construirimagen()
                 self.label3= tk.Label(self.framejug3,image = imagen, width = 115, height = 180)
                 self.label3.grid(row= 0, column = n)
                 self.label3.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-
+            self.framejug3.update_idletasks()
+            self.canvas3.config(scrollregion=self.canvas3.bbox("all"))
+    """
+    Nombre: mostrarcartasjugador4
+    Entradas:
+    Salidas: Muestra las cartas que esten en la baraja del jugador 4
+    Restricciones:
+    """
     def mostrarcartasjugador4(self):
         for widget in self.framejug4.winfo_children():
             widget.destroy() 
@@ -1681,13 +2154,28 @@ class OnevsOnevsOnevsOne:
             self.mostrar2.pack_forget()
             self.mostrar1.pack_forget()
             self.mostrar3.pack_forget()
+            self.canvas4.place(x=50, y = 500)
+            self.canvas2.place_forget()
+            self.canvas3.place_forget()
+            self.canvas.place_forget()
+            self.canvas.pack_forget()
+            self.scrollbar2.pack_forget()
+            self.scrollbar3.pack_forget()
+            self.scrollbar4.pack(side=tk.BOTTOM, fill=tk.X)
             for n in range(len(self.jugador4)):
                 carta = self.jugador4[n]
                 imagen = carta.construirimagen()
                 self.label4= tk.Label(self.framejug4,image = imagen, width = 115, height = 180)
                 self.label4.grid(row= 0, column = n)
                 self.label4.bind("<Button-1>", lambda e, c=carta: self.validarcarta(c))
-
+            self.framejug4.update_idletasks()
+            self.canvas4.config(scrollregion=self.canvas4.bbox("all"))
+    """
+    Nombre: mostrarprincipal
+    Entradas:
+    Salidas: Muestra las cartas de la baraja principal
+    Restricciones:
+    """
     def mostrarprincipal(self):
         for widget in self.frameprin.winfo_children():
             widget.destroy()
@@ -1696,14 +2184,24 @@ class OnevsOnevsOnevsOne:
         imagen = ultimacarta.construirimagen()
         self.label = tk.Label(self.frameprin,image = imagen, width = 115, height = 180)
         self.label.pack()
-
+    """
+    Nombre: actualizarinterfaz
+    Entradas:
+    Salidas: Llama las funciones de mostrar cartas, actualizando la interfaz
+    Restricciones:
+    """
     def actualizarinterfaz(self):
         self.mostrarcartasjugador1()
         self.mostrarcartasjugador2()
         self.mostrarcartasjugador3()
         self.mostrarcartasjugador4()
         self.mostrarprincipal()
-
+    """
+    Nombre: robarjug
+    Entradas:
+    Salidas: Permite al jugador comer cartas en caso de no tener la que se necesite
+    Restricciones:
+    """
     def robarjug(self):
         self.comer = True
         ultimacarta = self.principal[-1]
@@ -1735,7 +2233,12 @@ class OnevsOnevsOnevsOne:
                 self.actualizarinterfaz()
             else:
                 messagebox.showerror("Error","Tienes cartas disponibles para tirar")
-
+    """
+    Nombre: mezclarprincipal
+    Entradas:
+    Salidas: Mezcla las cartas de la baraja principal y las deposita en el mazo de comer
+    Restricciones:
+    """
     def mezclarprincipal(self):
         if len(self.principal)>1: 
             ultimacarta = self.principal[-1]
@@ -1744,7 +2247,12 @@ class OnevsOnevsOnevsOne:
                     self.baraja.mazo+=[elemento]
                     self.principal.remove(elemento)
             random.shuffle(self.baraja.mazo)
-
+    """
+    Nombre: validarcarta
+    Entradas: carta
+    Salidas: Valida si la carta presionada tiene el numero o el color con el que se debe jugar
+    Restricciones:
+    """
     def validarcarta(self,carta):
         ultimacarta = self.principal[-1]
         if self.turno == self.jugador1: 
@@ -1902,7 +2410,12 @@ class OnevsOnevsOnevsOne:
                     self.actualizarinterfaz()
                     self.cartaFinal()
                     self.validarGane()
-                
+    """
+    Nombre: validarreglasticas
+    Entradas: carta
+    Salidas: valida las reglas ticas, ya sea bloqueo, reversa, cambio de color, toma2 o toma4
+    Restricciones:
+    """         
     def validarreglasticas(self, carta):
         if carta.numero == "Reversa":
             if self.reversa == False:
@@ -2170,7 +2683,12 @@ class OnevsOnevsOnevsOne:
 
         elif carta.numero == "CambioColor":
             self.elegir()
-
+    """
+    Nombre: elegir
+    Entradas:
+    Salidas: Muestra una ventana en la que se puede elegir el color con el que se seguira jugando
+    Restricciones:
+    """
     def elegir(self):
         self.elegirColor = Toplevel()
         self.elegirColor.geometry("700x400")
@@ -2211,7 +2729,12 @@ class OnevsOnevsOnevsOne:
         self.colorVerde.place(x=530, y=120)
 
         self.elegirColor.mainloop()
-
+    """
+    Nombre: cambiarcolor
+    Entradas: colorEscogido
+    Salidas: Segun el color escogido anteriormente, se cambia el atributo de color de la ultima carta en el mazo principal
+    Restricciones:
+    """
     def cambiarcolor(self, colorEscogido):
         self.elegirColor.destroy()
         
@@ -2289,7 +2812,12 @@ class OnevsOnevsOnevsOne:
 
         
         messagebox.showinfo("Nuevo", f"El nuevo color es : {ultimacarta.color}")
-
+    """
+    Nombre: comercarta
+    Entradas: cantidad
+    Salidas: Hace que el jugador coma la cantidad de cartas ingresada
+    Restricciones:
+    """
     def comercarta(self, cantidad):
         if len(self.baraja.mazo)==0:
             self.mezclarprincipal()
@@ -2310,7 +2838,12 @@ class OnevsOnevsOnevsOne:
             elif self.turno == self.jugador4:
                 for x in range(cantidad):
                     self.jugador4 +=[self.baraja.mazo.pop()]
-
+    """
+    Nombre: cartaFinal
+    Entradas:
+    Salidas: Valida cuando a los jugadores les queda una carta restante
+    Restricciones:
+    """
     def cartaFinal(self):
         if len(self.jugador1)==1:
             messagebox.showinfo("¡UNO!","Al jugador 1 le queda una carta restante")
@@ -2324,7 +2857,12 @@ class OnevsOnevsOnevsOne:
         elif len(self.jugador4)==1:
             messagebox.showinfo("¡UNO!","Al jugador 4 le queda una carta restante")
             return
-
+    """
+    Nombre: validarGane
+    Entradas:
+    Salidas: Valida cuando los jugadores ya no tienen cartas 
+    Restricciones:
+    """
     def validarGane(self):
         if self.jugador1 == []:
             messagebox.showinfo("Victoria","¡Felicidades jugador 1, has ganado!")
